@@ -6,6 +6,59 @@ interface ToolbarProps {
   saved: boolean;
 }
 
+function fixOklchColors(clonedDoc: Document) {
+  // Walk all elements and replace oklch() in inline styles
+  const all = clonedDoc.querySelectorAll('*');
+  all.forEach((el) => {
+    const el2 = el as HTMLElement;
+    const style = el2.getAttribute('style');
+    if (style && style.includes('oklch')) {
+      // Replace oklch values with black as fallback, then let computed style resolve
+      el2.setAttribute('style', style.replace(/oklch\([^)]+\)/g, 'transparent'));
+    }
+  });
+
+  // Replace oklch in stylesheets
+  const sheets = clonedDoc.styleSheets;
+  for (let i = 0; i < sheets.length; i++) {
+    try {
+      const sheet = sheets[i] as CSSStyleSheet;
+      const rules = sheet.cssRules || sheet.rules;
+      if (!rules) continue;
+      for (let j = 0; j < rules.length; j++) {
+        const rule = rules[j];
+        if (rule instanceof CSSStyleRule && rule.style) {
+          const s = rule.style as CSSStyleDeclaration;
+          for (let k = 0; k < s.length; k++) {
+            const prop = s[k];
+            const val = s.getPropertyValue(prop);
+            if (val.includes('oklch(')) {
+              // Force the element to use resolved/computed color
+              // by setting the property to empty - the browser will resolve it
+              s.setProperty(prop, '', '');
+            }
+          }
+        }
+      }
+    } catch (_) { /* cross-origin stylesheet */ }
+  }
+
+  // Now force each element to use its computed style
+  all.forEach((el) => {
+    const htmlEl = el as HTMLElement;
+    const computed = clonedDoc.defaultView?.getComputedStyle(htmlEl);
+    if (!computed) return;
+
+    const props = ['color', 'background-color', 'border-color', 'outline-color', 'text-decoration-color'];
+    for (const prop of props) {
+      const val = computed.getPropertyValue(prop);
+      if (val && val !== 'rgba(0, 0, 0, 0)' && val !== 'transparent') {
+        htmlEl.style.setProperty(prop, val, 'important');
+      }
+    }
+  });
+}
+
 export function Toolbar({ saved }: ToolbarProps) {
   const { undo, redo, canUndo, canRedo, versionName, versions, loadVersion, setVersionName } = useCV();
   const [exporting, setExporting] = useState(false);
@@ -28,6 +81,7 @@ export function Toolbar({ saved }: ToolbarProps) {
           useCORS: true,
           logging: false,
           allowTaint: true,
+          onclone: fixOklchColors,
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' as const },
       };
@@ -53,7 +107,6 @@ export function Toolbar({ saved }: ToolbarProps) {
       )}
 
       <div className="h-12 bg-white border-b border-slate-200 flex items-center px-4 gap-2 shrink-0">
-        {/* Undo / Redo */}
         <button onClick={undo} disabled={!canUndo} className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-30" title="復原 Ctrl+Z">
           <Undo2 size={18} />
         </button>
@@ -63,7 +116,6 @@ export function Toolbar({ saved }: ToolbarProps) {
 
         <div className="w-px h-5 bg-slate-200 mx-1" />
 
-        {/* Version selector */}
         <select
           value={versionName}
           onChange={(e) => { setVersionName(e.target.value); loadVersion(e.target.value); }}
@@ -77,10 +129,8 @@ export function Toolbar({ saved }: ToolbarProps) {
 
         <div className="flex-1" />
 
-        {/* Save status */}
         <span className="text-xs text-slate-400">{saved ? '已儲存' : '儲存中…'}</span>
 
-        {/* Export */}
         <button
           onClick={handleExport}
           disabled={exporting}
