@@ -14,7 +14,7 @@ const fontMap: Record<string, string> = {
 };
 
 export function PreviewPanel() {
-  const { cv, template } = useCV();
+  const { cv, template, sectionOrder } = useCV();
 
   const TemplateComponent = {
     classic: ClassicTemplate,
@@ -34,7 +34,7 @@ export function PreviewPanel() {
         } as React.CSSProperties}
         className="w-[210mm] min-h-[297mm] bg-white shadow-2xl overflow-hidden"
       >
-        <TemplateComponent cv={cv} template={template} />
+        <TemplateComponent cv={cv} template={template} sectionOrder={sectionOrder} />
       </div>
     </div>
   );
