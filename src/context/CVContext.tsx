@@ -134,6 +134,20 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   );
   const [history, setHistory] = React.useState<CVData[]>([loadStorage('cv-data', sampleCV)]);
   const [historyIndex, setHistoryIndex] = React.useState(0);
+  const skipHistoryRef = React.useRef(false);
+
+  // Track history on every user edit
+  React.useEffect(() => {
+    if (skipHistoryRef.current) {
+      skipHistoryRef.current = false;
+      return;
+    }
+    setHistory(prev => {
+      const next = [...prev, cv];
+      return next.length > 50 ? next.slice(-50) : next;
+    });
+    setHistoryIndex(prev => prev + 1);
+  }, [cv]);
   const [template, setTemplate] = React.useState<TemplateSettings>(() =>
     loadStorage('cv-template', {
       templateId: 'classic' as const,
@@ -179,7 +193,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const undo = useCallback(() => {
-    skipHistory.current = true;
+    skipHistoryRef.current = true;
     if (historyIndex > 0) {
       const idx = historyIndex - 1;
       setHistoryIndex(idx);
@@ -188,7 +202,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   }, [history, historyIndex]);
 
   const redo = useCallback(() => {
-    skipHistory.current = true;
+    skipHistoryRef.current = true;
     if (historyIndex < history.length - 1) {
       const idx = historyIndex + 1;
       setHistoryIndex(idx);
@@ -214,5 +228,6 @@ export function useCV() {
   if (!ctx) throw new Error('useCV must be used within CVProvider');
   return ctx;
 }
+
 
 
