@@ -179,6 +179,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const undo = useCallback(() => {
+    skipHistory.current = true;
     if (historyIndex > 0) {
       const idx = historyIndex - 1;
       setHistoryIndex(idx);
@@ -187,6 +188,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   }, [history, historyIndex]);
 
   const redo = useCallback(() => {
+    skipHistory.current = true;
     if (historyIndex < history.length - 1) {
       const idx = historyIndex + 1;
       setHistoryIndex(idx);
@@ -212,4 +214,5 @@ export function useCV() {
   if (!ctx) throw new Error('useCV must be used within CVProvider');
   return ctx;
 }
+
 
