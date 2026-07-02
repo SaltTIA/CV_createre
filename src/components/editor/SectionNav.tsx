@@ -1,4 +1,4 @@
-﻿import { useState, useCallback } from 'react';
+﻿import { useState, useCallback, useRef, useEffect } from 'react';
 import { SectionKey } from '../../types/cv';
 import { sectionLabels } from '../../data/labels';
 import { ChevronUp, ChevronDown, FileText } from 'lucide-react';
@@ -12,49 +12,71 @@ interface SectionNavProps {
 
 export function SectionNav({ sections, active, onSelect, onReorder }: SectionNavProps) {
   const mainSections = sections.filter(k => k !== 'cover-letter');
-  const [animatingIndex, setAnimatingIndex] = useState<number | null>(null);
+  const tabRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const prevRects = useRef<Map<string, DOMRect>>(new Map());
+  const [animating, setAnimating] = useState(false);
 
-  const animate = useCallback((idx: number, callback: () => void) => {
-    setAnimatingIndex(idx);
-    callback();
-    setTimeout(() => setAnimatingIndex(null), 250);
+  // Save current positions before reorder
+  const capturePositions = useCallback(() => {
+    const rects = new Map<string, DOMRect>();
+    tabRefs.current.forEach((el, key) => {
+      rects.set(key, el.getBoundingClientRect());
+    });
+    return rects;
+  }, []);
+
+  // Apply FLIP animation
+  const animateFLIP = useCallback((prevRectsMap: Map<string, DOMRect>) => {
+    setAnimating(true);
+    requestAnimationFrame(() => {
+      tabRefs.current.forEach((el, key) => {
+        const prev = prevRectsMap.get(key);
+        const curr = el.getBoundingClientRect();
+        if (!prev) return;
+        const dx = prev.left - curr.left;
+        const dy = prev.top - curr.top;
+        if (dx !== 0 || dy !== 0) {
+          // Invert: move element to old position
+          el.style.transform = `translate(${dx}px, ${dy}px)`;
+          el.style.transition = 'none';
+          // Play: animate back to natural position
+          requestAnimationFrame(() => {
+            el.style.transition = 'transform 0.3s ease-out';
+            el.style.transform = 'translate(0, 0)';
+          });
+        }
+      });
+      setTimeout(() => setAnimating(false), 350);
+    });
   }, []);
 
   const moveUp = (idx: number) => {
     if (idx <= 0) return;
-    animate(idx - 1, () => {
-      const next = [...mainSections];
-      [next[idx - 1], next[idx]] = [next[idx], next[idx - 1]];
-      onReorder([...next, 'cover-letter']);
-    });
+    const prevRectsMap = capturePositions();
+    const next = [...mainSections];
+    [next[idx - 1], next[idx]] = [next[idx], next[idx - 1]];
+    onReorder([...next, 'cover-letter']);
+    requestAnimationFrame(() => animateFLIP(prevRectsMap));
   };
 
   const moveDown = (idx: number) => {
     if (idx >= mainSections.length - 1) return;
-    animate(idx + 1, () => {
-      const next = [...mainSections];
-      [next[idx], next[idx + 1]] = [next[idx + 1], next[idx]];
-      onReorder([...next, 'cover-letter']);
-    });
+    const prevRectsMap = capturePositions();
+    const next = [...mainSections];
+    [next[idx], next[idx + 1]] = [next[idx + 1], next[idx]];
+    onReorder([...next, 'cover-letter']);
+    requestAnimationFrame(() => animateFLIP(prevRectsMap));
   };
 
   return (
     <div className="border-b border-slate-100 bg-slate-50/80">
-      <style>{`
-        @keyframes tabPulse {
-          0% { transform: scale(1); }
-          30% { transform: scale(1.08); }
-          100% { transform: scale(1); }
-        }
-        .tab-animate {
-          animation: tabPulse 0.25s ease-out;
-        }
-      `}</style>
       <div className="flex flex-wrap items-center gap-1 p-2.5">
         {mainSections.map((key, i) => (
-          <div key={key} className={`flex items-center ${animatingIndex === i ? 'tab-animate' : ''}`}>
+          <div key={key}
+            ref={(el) => { if (el) tabRefs.current.set(key, el); }}
+            className="flex items-center">
             <button onClick={() => onSelect(key)}
-              className={`text-xs px-3 py-1.5 rounded-l-md whitespace-nowrap font-medium transition-all ${
+              className={`text-xs px-3 py-1.5 rounded-l-md whitespace-nowrap font-medium ${
                 active === key ? 'bg-blue-600 text-white shadow-sm' : 'bg-white text-slate-500 hover:text-slate-700 border border-r-0 border-slate-200 hover:bg-slate-50'
               }`}>
               {sectionLabels[key] || key}
@@ -73,7 +95,7 @@ export function SectionNav({ sections, active, onSelect, onReorder }: SectionNav
         ))}
         <div className="w-px h-5 bg-slate-200 mx-1.5" />
         <button onClick={() => onSelect('cover-letter')}
-          className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md whitespace-nowrap font-medium transition-all ${
+          className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md whitespace-nowrap font-medium ${
             active === 'cover-letter' ? 'bg-blue-600 text-white shadow-sm' : 'bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100'
           }`}>
           <FileText size={12} /> {sectionLabels['cover-letter']}
