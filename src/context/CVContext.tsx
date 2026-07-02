@@ -159,6 +159,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
       showPhoto: true,
     })
   );
+  const getCLKey = (v: string) => v === 'default' ? 'cv-cover-letter' : 'cv-cover-letter-' + v;
   const [coverLetter, setCoverL] = React.useState<CoverLetter>(() =>
     loadStorage('cv-cover-letter', {
       companyName: '', jobTitle: '', recipientName: '', companyAddress: '', subject: '', tone: 'professional' as const, greeting: '',
@@ -179,6 +180,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     }
   }, [cv, versionName]);
   useEffect(() => { localStorage.setItem('cv-template', JSON.stringify(template)); }, [template]);
+  useEffect(() => { localStorage.setItem(getCLKey(versionName), JSON.stringify(coverLetter)); }, [coverLetter, versionName]);
   useEffect(() => { localStorage.setItem('cv-section-order', JSON.stringify(sectionOrder)); }, [sectionOrder]);
 
   const [versionRefresh, setVersionRefresh] = React.useState(0);
@@ -260,6 +262,7 @@ export function useCV() {
   if (!ctx) throw new Error('useCV must be used within CVProvider');
   return ctx;
 }
+
 
 
 
