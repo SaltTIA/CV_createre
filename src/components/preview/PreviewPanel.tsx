@@ -5,6 +5,7 @@ import { ModernTemplate } from '../templates/ModernTemplate';
 import { MinimalTemplate } from '../templates/MinimalTemplate';
 import { SidebarTemplate } from '../templates/SidebarTemplate';
 import { DoubleColumnTemplate } from '../templates/DoubleColumnTemplate';
+import { CoverLetterPreview } from '../cover-letter/CoverLetterPreview';
 
 const fontMap: Record<string, string> = {
   sans: "'Inter', system-ui, sans-serif",
@@ -14,27 +15,39 @@ const fontMap: Record<string, string> = {
 };
 
 export function PreviewPanel() {
-  const { cv, template, sectionOrder } = useCV();
+  const { cv, template, sectionOrder, coverLetter, activeSection } = useCV();
 
-  const TemplateComponent = {
-    classic: ClassicTemplate,
-    modern: ModernTemplate,
-    minimal: MinimalTemplate,
-    sidebar: SidebarTemplate,
-    double: DoubleColumnTemplate,
-  }[template.templateId];
+  const isCoverLetter = activeSection === 'cover-letter';
+  const fontFamily = fontMap[template.font] || fontMap.sans;
 
   return (
     <div className="space-y-4 max-w-full">
-      <TemplateSelector />
+      {!isCoverLetter && <TemplateSelector />}
       <div
         id="cv-preview"
-        style={{
-          fontFamily: fontMap[template.font] || fontMap.sans,
-        } as React.CSSProperties}
+        style={{ fontFamily } as React.CSSProperties}
         className="w-[210mm] min-h-[297mm] bg-white shadow-2xl overflow-hidden"
       >
-        <TemplateComponent cv={cv} template={template} sectionOrder={sectionOrder} />
+        {isCoverLetter ? (
+          <CoverLetterPreview
+            coverLetter={coverLetter}
+            fullName={cv.personal.fullName}
+            email={cv.personal.email}
+            phone={cv.personal.phone}
+            location={cv.personal.location}
+            linkedIn={cv.personal.linkedIn}
+            accentColor={template.accentColor}
+            fontFamily={fontFamily}
+          />
+        ) : (
+          <>
+            {template.templateId === 'classic' && <ClassicTemplate cv={cv} template={template} sectionOrder={sectionOrder} />}
+            {template.templateId === 'modern' && <ModernTemplate cv={cv} template={template} sectionOrder={sectionOrder} />}
+            {template.templateId === 'minimal' && <MinimalTemplate cv={cv} template={template} sectionOrder={sectionOrder} />}
+            {template.templateId === 'sidebar' && <SidebarTemplate cv={cv} template={template} sectionOrder={sectionOrder} />}
+            {template.templateId === 'double' && <DoubleColumnTemplate cv={cv} template={template} sectionOrder={sectionOrder} />}
+          </>
+        )}
       </div>
     </div>
   );

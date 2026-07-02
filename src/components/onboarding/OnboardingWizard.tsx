@@ -1,22 +1,20 @@
-﻿import { ArrowRight, Pencil, FileText } from 'lucide-react';
+﻿import { FileText, ArrowRight, Pencil } from 'lucide-react';
+import { useCV } from '../../context/CVContext';
 
 interface Props {
   onComplete: () => void;
   onSkip: () => void;
 }
 
-const steps = [
-  { title: '基本資料', key: 'personal' },
-  { title: '個人簡介', key: 'summary' },
-  { title: '工作經歷', key: 'experiences' },
-  { title: '學歷', key: 'education' },
-  { title: '技能', key: 'skills' },
-  { title: '語言能力', key: 'languages' },
-  { title: '證照', key: 'certifications' },
-  { title: '風格選擇', key: 'template' },
-];
-
 export function OnboardingWizard({ onComplete, onSkip }: Props) {
+  const { setActiveSection } = useCV();
+
+  const goToCoverLetter = () => {
+    localStorage.setItem('cv-onboarded', 'true');
+    setActiveSection('cover-letter');
+    onComplete();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 flex items-center justify-center p-6">
       <div className="max-w-lg w-full bg-white rounded-2xl shadow-xl p-10 text-center space-y-8">
@@ -39,7 +37,7 @@ export function OnboardingWizard({ onComplete, onSkip }: Props) {
             快速開始（問卷引導）
             <ArrowRight size={18} />
           </button>
-          <p className="text-xs text-slate-400">{steps.length} 個步驟，約 3-5 分鐘</p>
+          <p className="text-xs text-slate-400">8 個步驟，約 3-5 分鐘</p>
         </div>
 
         <div className="border-t border-slate-100 pt-6 space-y-3">
@@ -51,7 +49,7 @@ export function OnboardingWizard({ onComplete, onSkip }: Props) {
             跳過，手動編輯
           </button>
           <button
-            onClick={onSkip}
+            onClick={goToCoverLetter}
             className="w-full flex items-center justify-center gap-2 bg-white border border-slate-200 text-slate-600 px-6 py-3 rounded-xl font-medium hover:bg-slate-50 transition-colors"
           >
             <FileText size={18} />
