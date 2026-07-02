@@ -37,6 +37,7 @@ export function OnboardingWizard({ onComplete }: Props) {
   const currentStep = step + 1;
 
   const finish = () => {
+    dispatch({ type: 'RESET_CV' });
     setActiveSection('personal');
     dispatch({ type: 'SET_PERSONAL', payload: { fullName, email, phone, location, linkedIn: linkedIn || undefined, portfolio: portfolio || undefined, photo: photo || undefined } });
     if (summary) dispatch({ type: 'SET_SUMMARY', payload: summary });
@@ -289,3 +290,4 @@ function WizInput({ label, value, onChange, placeholder, type = 'text' }: {
     </div>
   );
 }
+
