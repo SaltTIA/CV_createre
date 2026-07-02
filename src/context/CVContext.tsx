@@ -196,10 +196,18 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const renameVersion = useCallback((oldName: string, newName: string) => {
-    const data = localStorage.getItem('cv-version-' + oldName);
+    let data: string | null;
+    let oldKey: string;
+    if (oldName === 'default') {
+      data = localStorage.getItem('cv-data');
+      oldKey = 'cv-data';
+    } else {
+      data = localStorage.getItem('cv-version-' + oldName);
+      oldKey = 'cv-version-' + oldName;
+    }
     if (data) {
       localStorage.setItem('cv-version-' + newName, data);
-      localStorage.removeItem('cv-version-' + oldName);
+      localStorage.removeItem(oldKey);
       setVersionRefresh(v => v + 1);
     }
   }, []);
@@ -244,6 +252,7 @@ export function useCV() {
   if (!ctx) throw new Error('useCV must be used within CVProvider');
   return ctx;
 }
+
 
 
 
