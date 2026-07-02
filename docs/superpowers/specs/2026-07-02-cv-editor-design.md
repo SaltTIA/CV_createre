@@ -1,4 +1,4 @@
-## 概述
+﻿## 概述
 
 單頁英文履歷編輯器，面向個人求職者，部署於 GitHub Pages。核心體驗：表單填空即時渲染預覽，支援自動排版與多模板切換，附帶可選的引導式問卷降低使用門檻。
 
@@ -21,7 +21,7 @@
 單頁應用，左右雙欄：
 
 - **左欄：編輯區**（繁體中文 UI）
-  - 頂部區塊導航 tabs：基本資料、簡介、經歷、學歷、技能、語言、證照、作品集（選填）
+  - 頂部區塊導航 tabs：基本資料、簡介、經歷、學歷、技能、語言、證照、作品集（選填）、求職信
   - 點選切換對應表單模組，每個區塊一個獨立 Form 組件
   - 經歷、學歷、技能、語言、證照、作品集支援動態增刪多筆
 
@@ -44,6 +44,14 @@
 - certifications: {name, issuer, date}[]
 - projects?: {name, url?, description}[]
 
+## 外部 CV 匯入
+
+- 支援 PDF 與 DOCX 匯入，提取純文字後透過純規則引擎做結構識別
+- 識別策略：偵測常見 CV 區塊標題關鍵詞（Experience、Education、Skills 等），將後續文字關聯到對應欄位
+- 準確度約七成，雙欄佈局、表格排版、創意設計型 CV 可能解析失準
+- 定位為半自動輔助：解析結果填入對應表單後，使用者逐區確認修正
+- 依賴：pdf.js（PDF 文字提取）、mammoth.js（DOCX 文字提取）
+
 ## 組件樹
 
 ```
@@ -60,12 +68,14 @@ App
         │   ├── SkillsForm
         │   ├── LanguagesForm
         │   ├── CertificationsForm
-        │   └── ProjectsForm
+        │   ├── ProjectsForm
+        │   └── CoverLetterForm
         └── PreviewPanel
             ├── TemplateSelector
             ├── AutoLayoutToggle
             ├── CVPreview (A4 容器)
             │   └── 各 PreviewSection 組件
+            ├── ImportButton (PDF/DOCX 匯入)
             └── ExportButton
 ```
 
@@ -94,6 +104,20 @@ App
 4. 側邊色塊：左側深色底放基本資料，右側淺色放內容
 5. 雙欄緊湊：上方橫幅基本資料，下方左右雙欄排經歷與學歷
 
+## 求職信編輯器
+
+CV 編輯器的輕量延伸，作為左側導航的最後一個 tab。功能：
+
+- 自動帶入 CV 個人資料作為信頭（姓名、Email、電話、LinkedIn）
+- 三段式模板引導：開頭 / 正文 / 結尾框架，四種語氣可選（專業正式、熱情積極、簡潔直接、學術研究）
+- 使用者只需填寫公司名、職位名與自訂段落
+- 視覺預設沿用 CV 選定的模板風格，也可獨立切換
+- A4 預覽與獨立匯出 PDF
+- 合併匯出：一個按鈕將 CV + 求職信打包為一份兩頁 PDF
+- 資料存入同一套 localStorage，key `cv-cover-letter`
+
+匯出 CV 完成後顯示提示對話框，詢問使用者是否需要撰寫求職信，可選擇「開始撰寫」或「不用了，直接下載」。
+
 ## 自動排版引擎
 
 預設啟用。邏輯：
@@ -111,6 +135,7 @@ App
 ## 儲存與部署
 
 - 履歷資料：localStorage key `cv-data`，每次 dispatch 自動寫入
+- 求職信資料：localStorage key `cv-cover-letter`
 - 問卷完成標記：localStorage key `cv-onboarded`，已完成的用戶下次跳過問卷
 - 「清除資料重新開始」按鈕（含確認對話框）
 - 部署：Vite build → `dist/` → GitHub Pages（gh-pages 分支）
