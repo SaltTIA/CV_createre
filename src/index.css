@@ -17,3 +17,23 @@ body {
 #root {
   min-height: 100vh;
 }
+
+@media print {
+  body {
+    visibility: hidden;
+    background: white;
+  }
+  #cv-preview {
+    visibility: visible;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 210mm;
+    min-height: 297mm;
+    box-shadow: none !important;
+  }
+  #cv-preview * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
