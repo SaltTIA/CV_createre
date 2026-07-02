@@ -105,7 +105,7 @@ const CVContext = createContext<CVContextValue | null>(null);
 
 export const DEFAULT_SECTION_ORDER: SectionKey[] = [
   'personal', 'summary', 'experiences', 'education', 'skills',
-  'languages', 'certifications', 'projects', 'custom', 'cover-letter',
+  'languages', 'certifications', 'projects', 'custom',
 ];
 
 const SECTION_CONFIGS: SectionConfig[] = [
@@ -212,3 +212,4 @@ export function useCV() {
   if (!ctx) throw new Error('useCV must be used within CVProvider');
   return ctx;
 }
+
