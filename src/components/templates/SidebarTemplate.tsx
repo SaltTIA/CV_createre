@@ -17,7 +17,7 @@ export function SidebarTemplate({ cv, template }: Props) {
     <div className="flex h-full min-h-[297mm] text-[10pt]">
       <div className="w-[35%] p-6 text-white flex flex-col gap-5" style={{backgroundColor: accentColor}}>
         {template.showPhoto && personal.photo && (
-          <img src={personal.photo} className="w-24 h-24 rounded-full object-cover mx-auto border-2 border-white/40" alt="" />
+          <img src={personal.photo} className="w-24 h-24 rounded-full object-cover mx-auto border-2 border-white/40" alt="" style={{ objectPosition: `${personal.photoPosition?.x ?? 50}% ${personal.photoPosition?.y ?? 50}%` }} />
         )}
         <div>
           <h1 className="text-[15pt] font-bold mb-2">{personal.fullName}</h1>

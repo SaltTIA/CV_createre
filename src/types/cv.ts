@@ -6,6 +6,7 @@
   linkedIn?: string;
   portfolio?: string;
   photo?: string;
+  photoPosition?: { x: number; y: number };
 }
 
 export interface Experience {
@@ -132,3 +133,4 @@ export type CVAction =
   | { type: 'REMOVE_CUSTOM_ITEM'; sectionIndex: number; itemIndex: number }
   | { type: 'LOAD_CV'; payload: CVData }
   | { type: 'RESET_CV' };
+

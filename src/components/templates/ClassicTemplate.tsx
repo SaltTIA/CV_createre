@@ -1,4 +1,4 @@
-﻿import { CVData, TemplateSettings } from '../../types/cv';
+import { CVData, TemplateSettings } from '../../types/cv';
 
 function formatDate(d: string): string {
   if (!d) return '';
@@ -23,7 +23,7 @@ export function ClassicTemplate({ cv, template }: Props) {
         {/* Photo */}
         {template.showPhoto && personal.photo && (
           <div className="flex justify-center">
-            <img src={personal.photo} alt="" className="w-28 h-28 rounded-full object-cover border-2" style={{ borderColor: accentColor }} />
+            <img src={personal.photo} alt="" className="w-28 h-28 rounded-full object-cover border-2" style={{ borderColor: accentColor, objectPosition: `${personal.photoPosition?.x ?? 50}% ${personal.photoPosition?.y ?? 50}%` }} />
           </div>
         )}
 
