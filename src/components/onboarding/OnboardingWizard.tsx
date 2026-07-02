@@ -14,7 +14,7 @@ const PROFICIENCY_LEVELS: { value: Proficiency; label: string }[] = [
 interface Props { onComplete: () => void; }
 
 export function OnboardingWizard({ onComplete }: Props) {
-  const { dispatch, setActiveSection, setTemplate, template } = useCV();
+  const { dispatch, setActiveSection, setTemplate, template, saveVersion, setVersionName } = useCV();
   const [step, setStep] = useState(-1);
 
   const [fullName, setFullName] = useState('');
@@ -37,27 +37,29 @@ export function OnboardingWizard({ onComplete }: Props) {
   const currentStep = step + 1;
 
   const finish = () => {
-    dispatch({ type: 'RESET_CV' });
+    const now = new Date();
+    const versionLabel = 'CV ' + now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+    
+    const newCV = {
+      personal: { fullName, email, phone, location, linkedIn: linkedIn || undefined, portfolio: portfolio || undefined, photo: photo || undefined },
+      summary,
+      experiences: experiences.filter(e => e.company || e.title).map(e => ({ company: e.company, title: e.title, startDate: '', endDate: '', current: false, description: '' })),
+      education: educations.filter(e => e.school || e.degree).map(e => ({ school: e.school, degree: e.degree, field: e.field, startDate: '', endDate: '' })),
+      skills: skillInput ? [{ category: 'Skills', items: skillInput }] : [],
+      languages: languages.filter(l => l.language).map(l => ({ language: l.language, proficiency: l.proficiency })),
+      certifications: certName ? [{ name: certName, issuer: '', date: '' }] : [],
+      projects: [],
+      customSections: [],
+    };
+    
+    // Save as new version, then load it
+    dispatch({ type: 'LOAD_CV', payload: newCV });
     setActiveSection('personal');
-    dispatch({ type: 'SET_PERSONAL', payload: { fullName, email, phone, location, linkedIn: linkedIn || undefined, portfolio: portfolio || undefined, photo: photo || undefined } });
-    if (summary) dispatch({ type: 'SET_SUMMARY', payload: summary });
-    // Add all experiences
-    experiences.filter(e => e.company || e.title).forEach((exp, i) => {
-      dispatch({ type: 'ADD_EXPERIENCE' });
-      dispatch({ type: 'UPDATE_EXPERIENCE', index: i, payload: { company: exp.company, title: exp.title, startDate: '', endDate: '', current: false, description: '' } });
-    });
-    // Add all education
-    educations.filter(e => e.school || e.degree).forEach((edu, i) => {
-      dispatch({ type: 'ADD_EDUCATION' });
-      dispatch({ type: 'UPDATE_EDUCATION', index: i, payload: { school: edu.school, degree: edu.degree, field: edu.field, startDate: '', endDate: '' } });
-    });
-    if (skillInput) { dispatch({ type: 'ADD_SKILL' }); dispatch({ type: 'UPDATE_SKILL', index: 0, payload: { category: 'Skills', items: skillInput } }); }
-    // Add all languages
-    languages.filter(l => l.language).forEach((lang, i) => {
-      dispatch({ type: 'ADD_LANGUAGE' });
-      dispatch({ type: 'UPDATE_LANGUAGE', index: i, payload: { language: lang.language, proficiency: lang.proficiency } });
-    });
-    if (certName) { dispatch({ type: 'ADD_CERTIFICATION' }); dispatch({ type: 'UPDATE_CERTIFICATION', index: 0, payload: { name: certName, issuer: '', date: '' } }); }
+    // Use setTimeout to ensure state has updated before saving
+    setTimeout(() => {
+      saveVersion(versionLabel);
+      setVersionName(versionLabel);
+    }, 50);
     onComplete();
   };
 
@@ -290,4 +292,5 @@ function WizInput({ label, value, onChange, placeholder, type = 'text' }: {
     </div>
   );
 }
+
 
