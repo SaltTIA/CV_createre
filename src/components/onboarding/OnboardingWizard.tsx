@@ -32,8 +32,8 @@ export function OnboardingWizard({ onComplete }: Props) {
   const [versionNameInput, setVersionNameInput] = useState('');
 
   // Multi-entry states
-  const [experiences, setExperiences] = useState([{ company: '', title: '' }]);
-  const [educations, setEducations] = useState([{ school: '', degree: '', field: '' }]);
+  const [experiences, setExperiences] = useState([{ company: '', title: '', startDate: '', endDate: '', current: false, description: '' }]);
+  const [educations, setEducations] = useState([{ school: '', degree: '', field: '', startDate: '', endDate: '' }]);
   const [languages, setLanguages] = useState([{ language: '', proficiency: 'Fluent' as Proficiency }]);
 
   const totalSteps = 8;
@@ -42,12 +42,20 @@ export function OnboardingWizard({ onComplete }: Props) {
   const finish = () => {
     const now = new Date();
     const defaultName = 'CV ' + now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
-    const versionLabel = versionNameInput.trim() || defaultName;
+    let versionLabel = versionNameInput.trim() || defaultName;
+    // Prevent overwriting existing versions
+    let counter = 2;
+    let finalLabel = versionLabel;
+    while (localStorage.getItem('cv-version-' + finalLabel)) {
+      finalLabel = versionLabel + ' (' + counter + ')';
+      counter++;
+    }
+    versionLabel = finalLabel;
     const newCV = {
       personal: { fullName, email, phone, location, linkedIn: linkedIn || undefined, portfolio: portfolio || undefined, photo: photo || undefined },
       summary,
-      experiences: experiences.filter(e => e.company || e.title).map(e => ({ company: e.company, title: e.title, startDate: '', endDate: '', current: false, description: '' })),
-      education: educations.filter(e => e.school || e.degree).map(e => ({ school: e.school, degree: e.degree, field: e.field, startDate: '', endDate: '' })),
+      experiences: experiences.filter(e => e.company || e.title).map(e => ({ company: e.company, title: e.title, startDate: e.startDate || '', endDate: e.endDate || '', current: e.current || false, description: e.description || '' })),
+      education: educations.filter(e => e.school || e.degree).map(e => ({ school: e.school, degree: e.degree, field: e.field, startDate: e.startDate || '', endDate: e.endDate || '' })),
       skills: skillInput ? [{ category: 'Skills', items: skillInput }] : [],
       languages: languages.filter(l => l.language).map(l => ({ language: l.language, proficiency: l.proficiency })),
       certifications: certName ? [{ name: certName, issuer: '', date: '' }] : [],
@@ -132,7 +140,7 @@ export function OnboardingWizard({ onComplete }: Props) {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <div><h2 className="text-xl font-bold text-slate-800">工作經歷</h2><p className="text-sm text-slate-500">可新增多筆</p></div>
-            <button onClick={() => setExperiences([...experiences, { company: '', title: '' }])}
+            <button onClick={() => setExperiences([...experiences, { company: '', title: '', startDate: '', endDate: '', current: false, description: '' }])}
               className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium"><Plus size={16} /> 新增</button>
           </div>
           {experiences.map((exp, i) => (
@@ -147,6 +155,24 @@ export function OnboardingWizard({ onComplete }: Props) {
               <WizInput label="職位" value={exp.title} onChange={(v) => {
                 const next = [...experiences]; next[i] = { ...next[i], title: v }; setExperiences(next);
               }} placeholder="e.g. Senior Frontend Engineer" />
+              <div className="grid grid-cols-2 gap-3">
+                <WizInput label="開始日期 (選填)" value={exp.startDate} onChange={(v) => {
+                  const next = [...experiences]; next[i] = { ...next[i], startDate: v }; setExperiences(next);
+                }} placeholder="YYYY-MM" />
+                <WizInput label="結束日期 (選填)" value={exp.endDate} onChange={(v) => {
+                  const next = [...experiences]; next[i] = { ...next[i], endDate: v }; setExperiences(next);
+                }} placeholder="YYYY-MM" />
+              </div>
+              <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={exp.current} onChange={(e) => {
+                const next = [...experiences]; next[i] = { ...next[i], current: e.target.checked }; setExperiences(next);
+              }} className="rounded" />現任職位</label>
+              <div>
+                <label className="block text-sm font-medium text-slate-600 mb-1.5">工作描述 (選填)</label>
+                <textarea value={exp.description} onChange={(e) => {
+                  const next = [...experiences]; next[i] = { ...next[i], description: e.target.value }; setExperiences(next);
+                }} placeholder="簡述工作內容..." rows={3} spellCheck
+                  className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none transition-shadow placeholder:text-slate-300" />
+              </div>
             </div>
           ))}
         </div>
@@ -155,7 +181,7 @@ export function OnboardingWizard({ onComplete }: Props) {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <div><h2 className="text-xl font-bold text-slate-800">學歷</h2><p className="text-sm text-slate-500">可新增多筆</p></div>
-            <button onClick={() => setEducations([...educations, { school: '', degree: '', field: '' }])}
+            <button onClick={() => setEducations([...educations, { school: '', degree: '', field: '', startDate: '', endDate: '' }])}
               className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium"><Plus size={16} /> 新增</button>
           </div>
           {educations.map((edu, i) => (
@@ -174,6 +200,14 @@ export function OnboardingWizard({ onComplete }: Props) {
                 <WizInput label="科系" value={edu.field} onChange={(v) => {
                   const next = [...educations]; next[i] = { ...next[i], field: v }; setEducations(next);
                 }} placeholder="Computer Science" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <WizInput label="開始日期 (選填)" value={edu.startDate} onChange={(v) => {
+                  const next = [...educations]; next[i] = { ...next[i], startDate: v }; setEducations(next);
+                }} placeholder="YYYY-MM" />
+                <WizInput label="結束日期 (選填)" value={edu.endDate} onChange={(v) => {
+                  const next = [...educations]; next[i] = { ...next[i], endDate: v }; setEducations(next);
+                }} placeholder="YYYY-MM" />
               </div>
             </div>
           ))}
@@ -299,6 +333,8 @@ function WizInput({ label, value, onChange, placeholder, type = 'text' }: {
     </div>
   );
 }
+
+
 
 
 
