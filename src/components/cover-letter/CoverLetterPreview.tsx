@@ -16,12 +16,11 @@ export function CoverLetterPreview({ coverLetter, fullName, email, phone, locati
 
   return (
     <div className="h-full min-h-[297mm] p-12 text-[10.5pt] text-slate-700" style={{ fontFamily }}>
-      {/* Sender info block */}
+      {/* Sender */}
       <div className="mb-6">
-        <div className="text-[12pt] font-bold text-slate-800 mb-1">{fullName}</div>
+        <div className="text-[12pt] font-bold text-slate-800">{fullName}</div>
         <div className="text-[9pt] text-slate-500 space-y-0.5">
-          <div>{email}</div>
-          <div>{phone}</div>
+          <div>{email} | {phone}</div>
           <div>{location}</div>
           {linkedIn && <div>{linkedIn}</div>}
         </div>
@@ -29,21 +28,20 @@ export function CoverLetterPreview({ coverLetter, fullName, email, phone, locati
 
       <div className="text-[9pt] text-slate-500 mb-5">{today}</div>
 
-      {/* Recipient */}
-      <div className="mb-5 text-[9.5pt] text-slate-700 space-y-0.5">
+      {/* Recipient block */}
+      <div className="mb-5 text-[10pt] text-slate-700 space-y-0.5">
         {coverLetter.recipientName && <div>{coverLetter.recipientName}</div>}
-        {coverLetter.jobTitle && <div>{coverLetter.jobTitle}</div>}
         {coverLetter.companyName && <div>{coverLetter.companyName}</div>}
-        {coverLetter.companyAddress && <div className="text-slate-500">{coverLetter.companyAddress}</div>}
+        {coverLetter.companyAddress && <div className="text-[9pt] text-slate-500">{coverLetter.companyAddress}</div>}
       </div>
 
-      {/* Subject */}
+      {/* Subject line */}
       <div className="mb-5 text-[10pt] font-semibold text-slate-800">
-        {coverLetter.subject || (coverLetter.jobTitle ? 'Re: Application for ' + coverLetter.jobTitle : '')}
+        {coverLetter.subject || (coverLetter.jobTitle ? 'Re: Application for ' + coverLetter.jobTitle + ' Position' : 'Re: Application')}
       </div>
 
       {/* Greeting */}
-      <div className="mb-4 text-[10pt] text-slate-700">
+      <div className="mb-4 text-[10pt]">
         {coverLetter.greeting || (coverLetter.recipientName ? 'Dear ' + coverLetter.recipientName + ',' : 'Dear Hiring Manager,')}
       </div>
 
@@ -52,29 +50,27 @@ export function CoverLetterPreview({ coverLetter, fullName, email, phone, locati
         {coverLetter.opening ? (
           <p>{coverLetter.opening}</p>
         ) : (
-          <p className="text-slate-300 italic">I am writing to express my strong interest in the {coverLetter.jobTitle || '[Position]'} position at {coverLetter.companyName || '[Company]'}. With my background and skills, I believe I would be a valuable addition to your team.</p>
+          <p className="text-slate-300 italic">I am writing to express my strong interest in the {coverLetter.jobTitle || '[Position]'} position at {coverLetter.companyName || '[Company]'}.</p>
         )}
 
         {coverLetter.body ? (
           <p>{coverLetter.body}</p>
         ) : (
-          <p className="text-slate-300 italic">Throughout my career, I have developed a strong foundation in my field. My experience has equipped me with the skills necessary to contribute effectively to your organization and help drive meaningful results. I am particularly drawn to this opportunity because of my passion for innovation and commitment to excellence.</p>
+          <p className="text-slate-300 italic">Throughout my career, I have developed expertise in my field. My experience has equipped me to contribute effectively to your organization.</p>
         )}
 
         {coverLetter.closing ? (
           <p>{coverLetter.closing}</p>
         ) : (
-          <p className="text-slate-300 italic">I would welcome the opportunity to discuss how my background and skills would benefit {coverLetter.companyName || 'your organization'}. Thank you for your time and consideration. I look forward to hearing from you.</p>
+          <p className="text-slate-300 italic">I welcome the opportunity to discuss my qualifications further. Thank you for your consideration.</p>
         )}
       </div>
 
       {/* Signature */}
-      <div className="mt-8 pt-4">
-        <p className="text-[10pt] text-slate-700">Sincerely,</p>
-        <p className="text-[11pt] font-semibold text-slate-800 mt-6">{fullName}</p>
-        <div className="text-[8.5pt] text-slate-400 mt-0.5">
-          {email} | {phone}
-        </div>
+      <div className="mt-8">
+        <p className="text-[10pt]">Sincerely,</p>
+        <p className="text-[11pt] font-semibold text-slate-800 mt-5">{fullName}</p>
+        <div className="text-[8.5pt] text-slate-400 mt-1">{email} | {phone}</div>
       </div>
     </div>
   );
