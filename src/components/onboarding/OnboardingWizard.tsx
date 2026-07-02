@@ -26,6 +26,9 @@ export function OnboardingWizard({ onComplete }: Props) {
   const [linkedIn, setLinkedIn] = useState('');
   const [portfolio, setPortfolio] = useState('');
   const [photo, setPhoto] = useState('');
+  const [photoPos, setPhotoPos] = useState({ x: 50, y: 50 });
+  const [showPhotoEditor, setShowPhotoEditor] = useState(false);
+  const [dragPos, setDragPos] = useState({ x: 50, y: 50 });
   const [summary, setSummary] = useState('');
   const [skillInput, setSkillInput] = useState('');
   const [certName, setCertName] = useState('');
@@ -52,7 +55,7 @@ export function OnboardingWizard({ onComplete }: Props) {
     }
     versionLabel = finalLabel;
     const newCV = {
-      personal: { fullName, email, phone, location, linkedIn: linkedIn || undefined, portfolio: portfolio || undefined, photo: photo || undefined },
+      personal: { fullName, email, phone, location, linkedIn: linkedIn || undefined, portfolio: portfolio || undefined, photo: photo || undefined, photoPosition: photo ? photoPos : undefined },
       summary,
       experiences: experiences.filter(e => e.company || e.title).map(e => ({ company: e.company, title: e.title, startDate: e.startDate || '', endDate: e.endDate || '', current: e.current || false, description: e.description || '' })),
       education: educations.filter(e => e.school || e.degree).map(e => ({ school: e.school, degree: e.degree, field: e.field, startDate: e.startDate || '', endDate: e.endDate || '' })),
@@ -121,9 +124,38 @@ export function OnboardingWizard({ onComplete }: Props) {
             <label className="block text-sm font-medium text-slate-600 mb-1.5">個人照片 (選填)</label>
             <input type="file" accept="image/*" onChange={(e) => {
               const file = e.target.files?.[0];
-              if (file) { const r = new FileReader(); r.onload = () => setPhoto(r.result as string); r.readAsDataURL(file); }
+              if (file) { const r = new FileReader(); r.onload = () => { setPhoto(r.result as string); setDragPos(photoPos); setShowPhotoEditor(true); }; r.readAsDataURL(file); }
             }} className="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-            {photo && <img src={photo} alt="" className="mt-2 w-16 h-16 rounded-full object-cover border" />}
+                        {photo && (
+              <div className="flex items-center gap-3 mt-2">
+                <img src={photo} alt="" className="w-16 h-16 rounded-full object-cover border" style={{objectPosition: photoPos.x + '% ' + photoPos.y + '%'}} />
+                <button type="button" onClick={() => { setDragPos(photoPos); setShowPhotoEditor(true); }}
+                  className="text-xs text-blue-600 hover:text-blue-700 font-medium">調整位置</button>
+              </div>
+            )}
+            {/* Photo editor modal */}
+            {showPhotoEditor && photo && (
+              <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+                <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h4 className="font-semibold text-slate-800">調整照片位置</h4>
+                    <button onClick={() => setShowPhotoEditor(false)} className="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+                  </div>
+                  <p className="text-xs text-slate-500">拖動照片對齊圓形框</p>
+                  <div className="relative w-[250px] h-[250px] rounded-full overflow-hidden border-4 border-blue-500 mx-auto cursor-move select-none"
+                    onMouseDown={(e) => { e.preventDefault(); const start = { x: e.clientX, y: e.clientY, px: dragPos.x, py: dragPos.y };
+                      const move = (ev: MouseEvent) => { const dx = ((ev.clientX - start.x) / 250) * 100; const dy = ((ev.clientY - start.y) / 250) * 100; setDragPos({ x: Math.min(100, Math.max(0, start.px + dx)), y: Math.min(100, Math.max(0, start.py + dy)) }); };
+                      const up = () => { window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); };
+                      window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
+                    }}>
+                    <img src={photo} alt="" className="w-full h-full" style={{objectFit: 'cover', objectPosition: dragPos.x + '% ' + dragPos.y + '%'}} draggable={false} />
+                    <div className="absolute inset-0 pointer-events-none"><div className="absolute top-1/2 left-0 right-0 h-px bg-white/40" /><div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/40" /></div>
+                  </div>
+                  <button onClick={() => { setPhotoPos(dragPos); setShowPhotoEditor(false); }}
+                    className="w-full bg-blue-600 text-white py-2.5 rounded-xl font-medium hover:bg-blue-700">確認位置</button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       );
@@ -333,6 +365,7 @@ function WizInput({ label, value, onChange, placeholder, type = 'text' }: {
     </div>
   );
 }
+
 
 
 
