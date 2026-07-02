@@ -16,37 +16,26 @@ export function Toolbar({ saved }: ToolbarProps) {
 
     setExporting(true);
     try {
-      const html2pdf = (await import('html2pdf.js')).default;
-      const clone = element.cloneNode(true) as HTMLElement;
-
-      // Ensure clone has proper styling for PDF
-      clone.style.width = '210mm';
-      clone.style.minHeight = '297mm';
-      clone.style.position = 'absolute';
-      clone.style.left = '-9999px';
-      clone.style.top = '0';
-      clone.style.zIndex = '-1';
-      document.body.appendChild(clone);
+      const html2pdfModule = await import('html2pdf.js');
+      const html2pdf = html2pdfModule.default || html2pdfModule;
 
       const opt = {
-        margin: 0,
+        margin: [0, 0, 0, 0],
         filename: 'cv.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
           scale: 2,
           useCORS: true,
           logging: false,
-          windowWidth: 794,
-          windowHeight: 1123,
+          allowTaint: true,
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' as const },
       };
 
-      await html2pdf().set(opt).from(clone).save();
-      document.body.removeChild(clone);
+      await html2pdf().set(opt).from(element).save();
     } catch (err) {
-      alert('匯出失敗，請稍後再試');
-      console.error('PDF export failed:', err);
+      console.error('PDF export error:', err);
+      alert('匯出失敗：' + (err instanceof Error ? err.message : '請稍後再試'));
     } finally {
       setExporting(false);
     }
@@ -54,7 +43,6 @@ export function Toolbar({ saved }: ToolbarProps) {
 
   return (
     <>
-      {/* Loading overlay */}
       {exporting && (
         <div className="fixed inset-0 bg-black/30 z-[100] flex items-center justify-center">
           <div className="bg-white rounded-xl shadow-xl px-8 py-6 flex items-center gap-3">
