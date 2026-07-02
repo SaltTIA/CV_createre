@@ -5,6 +5,9 @@ import { ModernTemplate } from '../templates/ModernTemplate';
 import { MinimalTemplate } from '../templates/MinimalTemplate';
 import { SidebarTemplate } from '../templates/SidebarTemplate';
 import { DoubleColumnTemplate } from '../templates/DoubleColumnTemplate';
+import { TimelineTemplate } from '../templates/TimelineTemplate';
+import { CompactTemplate } from '../templates/CompactTemplate';
+import { ExecutiveTemplate } from '../templates/ExecutiveTemplate';
 import { CoverLetterPreview } from '../cover-letter/CoverLetterPreview';
 
 const fontMap: Record<string, string> = {
@@ -52,5 +55,6 @@ export function PreviewPanel() {
     </div>
   );
 }
+
 
 

@@ -8,6 +8,9 @@ const TEMPLATES = [
   { id: 'minimal' as const, name: '極簡黑白', icon: Grid, desc: '無裝飾' },
   { id: 'sidebar' as const, name: '側邊色塊', icon: Columns, desc: '深色側欄' },
   { id: 'double' as const, name: '雙欄緊湊', icon: Columns, desc: '橫幅雙欄' },
+  { id: 'timeline' as const, name: '時間軸', icon: AlignLeft, desc: '左側時間線' },
+  { id: 'compact' as const, name: '超緊湊', icon: Grid, desc: '高密度節省空間' },
+  { id: 'executive' as const, name: '高管風格', icon: Layout, desc: 'Serif橫線分隔' },
 ];
 
 export function TemplateSelector() {
@@ -18,7 +21,7 @@ export function TemplateSelector() {
       <div className="flex items-center gap-2 text-sm text-slate-500">
         <Palette size={16} /> <span className="font-medium">模板</span>
       </div>
-      <div className="grid grid-cols-5 gap-2">
+      <div className="grid grid-cols-4 gap-2">
         {TEMPLATES.map(({ id, name, icon: Icon, desc }) => (
           <button key={id} onClick={() => setTemplate({ ...template, templateId: id })}
             className={`p-2.5 rounded-xl border-2 text-xs transition-all ${
@@ -52,3 +55,4 @@ export function TemplateSelector() {
     </div>
   );
 }
+

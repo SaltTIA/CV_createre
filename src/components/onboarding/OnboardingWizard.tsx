@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import { useCV } from '../../context/CVContext';
+
 import { ArrowRight, ArrowLeft, Check, FileText, Pencil, Sparkles, Plus, Trash2 } from 'lucide-react';
 import type { Proficiency } from '../../types/cv';
 
@@ -232,7 +233,7 @@ export function OnboardingWizard({ onComplete }: Props) {
           <div className="h-3" />
           <p className="text-sm text-slate-400">選擇模板風格：</p>
           <p className="text-sm text-slate-500">隨時可以在編輯器中更換</p>
-          <div className="grid gap-3">
+          <div className="grid grid-cols-2 gap-3">
             {[
               { id: 'classic' as const, name: '傳統簡潔', desc: '側欄資訊 + 主內容' },
               { id: 'modern' as const, name: '現代緊湊', desc: '全寬，線條分隔' },
@@ -242,7 +243,7 @@ export function OnboardingWizard({ onComplete }: Props) {
             ].map(({ id, name, desc }) => (
               <button key={id} onClick={() => setTemplate({ ...template, templateId: id })}
                 className={`p-4 rounded-xl border-2 text-left transition-all ${template.templateId === id ? 'border-blue-500 bg-blue-50 shadow-md' : 'border-slate-100 hover:border-slate-300 hover:shadow-sm bg-white'}`}>
-                <div className="font-semibold text-slate-800">{name}</div><div className="text-xs text-slate-500 mt-1">{desc}</div></button>
+                <div className="font-semibold text-slate-800">{name}</div><div className="w-full h-16 bg-slate-50 rounded-lg mt-2 overflow-hidden">{React.createElement(THUMBNAILS[id].thumb)}</div><div className="text-xs text-slate-500 mt-1">{desc}</div></button>
             ))}
           </div>
         </div>
@@ -293,6 +294,8 @@ function WizInput({ label, value, onChange, placeholder, type = 'text' }: {
     </div>
   );
 }
+
+
 
 
 
