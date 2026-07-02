@@ -9,11 +9,35 @@ export function Toolbar({ saved }: ToolbarProps) {
   const { undo, redo, canUndo, canRedo, versionName, versions, loadVersion, setVersionName } = useCV();
   const navigate = useNavigate();
 
-  const handleExport = useCallback(() => { window.print(); }, []);
+  const handleExport = useCallback(() => {
+    const preview = document.getElementById('cv-preview');
+    if (!preview) return;
+
+    // Move #cv-preview to be a direct child of body for printing
+    const parent = preview.parentElement;
+    const body = document.body;
+    const originalStyles = preview.getAttribute('style') || '';
+
+    // Temporarily detach and append to body
+    preview.setAttribute('style', originalStyles + ';position:fixed!important;left:0!important;top:0!important;width:210mm!important;min-height:297mm!important;z-index:99999!important;background:white!important;box-shadow:none!important;margin:0!important;padding:0!important;');
+    body.appendChild(preview);
+
+    // Print
+    window.print();
+
+    // Restore after print dialog closes
+    setTimeout(() => {
+      if (parent) {
+        parent.appendChild(preview);
+        preview.setAttribute('style', originalStyles);
+      }
+    }, 100);
+  }, []);
+
   const goHome = useCallback(() => { navigate('/'); }, [navigate]);
 
   return (
-    <div className="h-12 bg-white/80 backdrop-blur-sm border-b border-slate-200/80 flex items-center px-3 md:px-4 flex-wrap gap-y-1 gap-1.5 shrink-0">
+    <div className="h-12 bg-white/80 backdrop-blur-sm border-b border-slate-200/80 flex items-center px-4 gap-1.5 shrink-0">
       <button onClick={goHome} className="p-2 rounded-lg hover:bg-slate-100 transition-colors" title="返回首頁">
         <Home size={17} className="text-slate-500" />
       </button>
@@ -39,4 +63,3 @@ export function Toolbar({ saved }: ToolbarProps) {
     </div>
   );
 }
-

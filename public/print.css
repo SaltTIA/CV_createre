@@ -2,38 +2,3 @@
   size: A4;
   margin: 0;
 }
-
-@media print {
-  html {
-    width: 210mm;
-    height: 297mm;
-    margin: 0;
-    padding: 0;
-    background: white;
-  }
-
-  body {
-    visibility: hidden;
-    background: white;
-    margin: 0;
-    padding: 0;
-  }
-
-  #cv-preview {
-    visibility: visible;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 210mm;
-    min-height: 297mm;
-    box-shadow: none;
-    margin: 0;
-    padding: 0;
-    background: white;
-  }
-
-  #cv-preview * {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-}
