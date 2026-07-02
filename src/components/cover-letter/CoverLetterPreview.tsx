@@ -36,9 +36,14 @@ export function CoverLetterPreview({ coverLetter, fullName, email, phone, locati
       </div>
 
       {/* Subject line */}
-      <div className="mb-5 text-[10pt] font-semibold text-slate-800">
+      <div className="mb-4 text-[10pt] font-semibold text-slate-800">
         {coverLetter.subject || (coverLetter.jobTitle ? 'Re: Application for ' + coverLetter.jobTitle + ' Position' : 'Re: Application')}
       </div>
+      {coverLetter.jobTitle && (
+        <div className="mb-4 text-[10pt] text-slate-700">
+          <span className="font-medium">Position Applied:</span> {coverLetter.jobTitle}
+        </div>
+      )}
 
       {/* Greeting */}
       <div className="mb-4 text-[10pt]">
@@ -75,3 +80,4 @@ export function CoverLetterPreview({ coverLetter, fullName, email, phone, locati
     </div>
   );
 }
+
