@@ -159,8 +159,9 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
       showPhoto: true,
     })
   );
+    const getCoverLetterKey = (vName: string) => vName === 'default' ? 'cv-cover-letter' : 'cv-cover-letter-' + vName;
   const [coverLetter, setCoverL] = React.useState<CoverLetter>(() =>
-    loadStorage('cv-cover-letter', {
+    loadStorage(getCoverLetterKey(versionName), {
       companyName: '', jobTitle: '', recipientName: '', companyAddress: '', subject: '', tone: 'professional' as const, greeting: '',
       opening: '', body: '', closing: '',
     })
@@ -178,7 +179,12 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('cv-version-' + versionName, JSON.stringify(cv));
     }
   }, [cv, versionName]);
-  useEffect(() => { localStorage.setItem('cv-template', JSON.stringify(template)); }, [template]);
+    useEffect(() => { localStorage.setItem('cv-template', JSON.stringify(template)); }, [template]);
+
+  // Save cover letter per version
+  useEffect(() => {
+    localStorage.setItem(getCoverLetterKey(versionName), JSON.stringify(coverLetter));
+  }, [coverLetter, versionName]);
   useEffect(() => { localStorage.setItem('cv-section-order', JSON.stringify(sectionOrder)); }, [sectionOrder]);
 
   const [versionRefresh, setVersionRefresh] = React.useState(0);
@@ -187,11 +193,17 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     catch { return []; }
   }, [versionRefresh]);
 
-    const loadVersion = useCallback((name: string) => {
+      const loadVersion = useCallback((name: string) => {
     const data = name === 'default' 
       ? loadStorage('cv-data', sampleCV)
       : loadStorage('cv-version-' + name, null);
     if (data) dispatch({ type: 'LOAD_CV', payload: data as CVData });
+    // Also load version-specific cover letter
+    const clData = loadStorage(getCoverLetterKey(name), {
+      companyName: '', jobTitle: '', recipientName: '', companyAddress: '', subject: '', tone: 'professional' as const, greeting: '',
+      opening: '', body: '', closing: '',
+    });
+    setCoverL(clData);
     setVersionName(name);
   }, []);
 
@@ -260,6 +272,7 @@ export function useCV() {
   if (!ctx) throw new Error('useCV must be used within CVProvider');
   return ctx;
 }
+
 
 
 
