@@ -49,12 +49,16 @@ export function PreviewPanel() {
             {template.templateId === 'minimal' && <MinimalTemplate cv={cv} template={template} sectionOrder={sectionOrder} />}
             {template.templateId === 'sidebar' && <SidebarTemplate cv={cv} template={template} sectionOrder={sectionOrder} />}
             {template.templateId === 'double' && <DoubleColumnTemplate cv={cv} template={template} sectionOrder={sectionOrder} />}
+            {template.templateId === '\''timeline'\'' && <TimelineTemplate cv={cv} template={template} sectionOrder={sectionOrder} />}
+            {template.templateId === '\''compact'\'' && <CompactTemplate cv={cv} template={template} sectionOrder={sectionOrder} />}
+            {template.templateId === '\''executive'\'' && <ExecutiveTemplate cv={cv} template={template} sectionOrder={sectionOrder} />}
           </>
         )}
       </div>
     </div>
   );
 }
+
 
 
 
