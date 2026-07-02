@@ -44,6 +44,10 @@ export function TemplateSelector() {
             className="border border-slate-200 rounded-lg px-2 py-1 text-sm bg-white">
             <option value="sans">Sans-Serif</option><option value="serif">Serif</option>
             <option value="modern">Modern</option><option value="classic">Classic</option>
+            <option value="helvetica">Helvetica</option>
+            <option value="garamond">Garamond</option>
+            <option value="verdana">Verdana</option>
+            <option value="trebuchet">Trebuchet MS</option>
           </select></label>
         <label className="flex items-center gap-2"><input type="checkbox" checked={template.autoLayout}
           onChange={(e) => setTemplate({ ...template, autoLayout: e.target.checked })} className="rounded" />
@@ -55,5 +59,6 @@ export function TemplateSelector() {
     </div>
   );
 }
+
 
 

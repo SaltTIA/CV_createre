@@ -15,6 +15,10 @@ const fontMap: Record<string, string> = {
   serif: "'Georgia', serif",
   modern: "'Courier New', monospace",
   classic: "'Times New Roman', serif",
+  helvetica: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+  garamond: "Garamond, 'Times New Roman', serif",
+  verdana: "Verdana, Geneva, sans-serif",
+  trebuchet: "'Trebuchet MS', 'Lucida Sans', sans-serif",
 };
 
 export function PreviewPanel() {
@@ -47,4 +51,5 @@ export function PreviewPanel() {
     </div>
   );
 }
+
 
