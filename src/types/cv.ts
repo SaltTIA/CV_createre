@@ -65,7 +65,7 @@ export interface CoverLetter {
 }
 
 export type TemplateId = 'classic' | 'modern' | 'minimal' | 'sidebar' | 'double' | 'timeline' | 'compact' | 'executive';
-export type FontId = 'sans' | 'serif' | 'modern' | 'classic';
+export type FontId = 'sans' | 'serif' | 'modern' | 'classic' | 'helvetica' | 'garamond' | 'verdana' | 'trebuchet';
 
 export interface TemplateSettings {
   templateId: TemplateId;
@@ -133,5 +133,6 @@ export type CVAction =
   | { type: 'REMOVE_CUSTOM_ITEM'; sectionIndex: number; itemIndex: number }
   | { type: 'LOAD_CV'; payload: CVData }
   | { type: 'RESET_CV' };
+
 
 
