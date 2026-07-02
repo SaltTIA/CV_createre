@@ -18,6 +18,11 @@ body {
   min-height: 100vh;
 }
 
+@page {
+  size: A4;
+  margin: 0;
+}
+
 @media print {
   body {
     visibility: hidden;
@@ -37,3 +42,4 @@ body {
     print-color-adjust: exact !important;
   }
 }
+
