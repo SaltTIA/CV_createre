@@ -150,6 +150,52 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     });
     setHistoryIndex(prev => prev + 1);
   }, [cv]);
+  const getCoverLetterKey = (vName: string) => vName === 'default' ? 'cv-cover-letter' : 'cv-cover-letter-' + vName;
+
+  const [template, setTemplate] = React.useState<TemplateSettings>(() =>
+    loadStorage('cv-template', {
+      templateId: 'classic' as const, accentColor: '#2563eb', font: 'sans' as const, autoLayout: true, showPhoto: true,
+    })
+  );
+  const [versionName, setVersionName] = React.useState('default');
+  const [coverLetter, setCoverL] = React.useState<CoverLetter>(() =>
+    loadStorage(getCoverLetterKey('default'), {
+      companyName: '', jobTitle: '', recipientName: '', companyAddress: '', subject: '', tone: 'professional' as const, greeting: '',
+      opening: '', body: '', closing: '',
+    })
+  );
+  const [activeSection, setActiveSection] = React.useState<SectionKey>('personal');
+  const [sectionOrder, setSectionOrder] = React.useState<SectionKey[]>(() =>
+    loadStorage('cv-section-order', DEFAULT_SECTION_ORDER)
+  );
+  const [versionRefresh, setVersionRefresh] = React.useState(0);
+  const versions = useMemo(() => {
+    try { return Object.keys(localStorage).filter(k => k.startsWith('cv-version-')).map(k => k.replace('cv-version-', '')); }
+    catch { return []; }
+  }, [versionRefresh]);
+
+  useEffect(() => { localStorage.setItem('cv-data', JSON.stringify(cv)); }, [cv]);
+  useEffect(() => { localStorage.setItem('cv-template', JSON.stringify(template)); }, [template]);
+  useEffect(() => { localStorage.setItem('cv-section-order', JSON.stringify(sectionOrder)); }, [sectionOrder]);
+  useEffect(() => { localStorage.setItem(getCoverLetterKey(versionName), JSON.stringify(coverLetter)); }, [coverLetter, versionName]);
+
+  const loadVersion = useCallback((name: string) => {
+    const data = name === 'default' ? loadStorage('cv-data', sampleCV) : loadStorage('cv-version-' + name, null);
+    if (data) dispatch({ type: 'LOAD_CV', payload: data as CVData });
+    const clData = loadStorage(getCoverLetterKey(name), { companyName: '', jobTitle: '', recipientName: '', companyAddress: '', subject: '', tone: 'professional' as const, greeting: '', opening: '', body: '', closing: '' });
+    setCoverL(clData);
+    setVersionName(name);
+  }, []);
+  const saveVersion = useCallback((name: string) => { localStorage.setItem('cv-version-' + name, JSON.stringify(cv)); }, [cv]);
+  const deleteVersion = useCallback((name: string) => { localStorage.removeItem('cv-version-' + name); setVersionRefresh(v => v + 1); }, []);
+  const renameVersion = useCallback((oldName: string, newName: string) => {
+    let data: string | null; let oldKey: string;
+    if (oldName === 'default') { data = localStorage.getItem('cv-data'); oldKey = 'cv-data'; }
+    else { data = localStorage.getItem('cv-version-' + oldName); oldKey = 'cv-version-' + oldName; }
+    if (data) { localStorage.setItem('cv-version-' + newName, data); localStorage.removeItem(oldKey); setVersionRefresh(v => v + 1); }
+  }, []);
+  const refreshVersions = useCallback(() => { setVersionRefresh(v => v + 1); }, []);
+
   const [template, setTemplate] = React.useState<TemplateSettings>(() =>
     loadStorage('cv-template', {
       templateId: 'classic' as const,
@@ -272,6 +318,7 @@ export function useCV() {
   if (!ctx) throw new Error('useCV must be used within CVProvider');
   return ctx;
 }
+
 
 
 
