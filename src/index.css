@@ -1,0 +1,19 @@
+﻿@import 'tailwindcss';
+
+@theme {
+  --color-accent: var(--accent-color);
+}
+
+:root {
+  --accent-color: #2563eb;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f1f5f9;
+}
+
+#root {
+  min-height: 100vh;
+}
