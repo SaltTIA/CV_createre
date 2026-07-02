@@ -180,7 +180,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     }
   }, [cv, versionName]);
   useEffect(() => { localStorage.setItem('cv-template', JSON.stringify(template)); }, [template]);
-  useEffect(() => { localStorage.setItem(getCLKey(versionName), JSON.stringify(coverLetter)); }, [coverLetter, versionName]);
+  const setCoverLetter = useCallback((cl: CoverLetter) => { localStorage.setItem(getCLKey(versionName), JSON.stringify(cl)); setCoverL(cl); }, [versionName]);
   useEffect(() => { localStorage.setItem('cv-section-order', JSON.stringify(sectionOrder)); }, [sectionOrder]);
 
   const [versionRefresh, setVersionRefresh] = React.useState(0);
@@ -246,7 +246,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <CVContext.Provider value={{
-      cv, dispatch, template, setTemplate, coverLetter, setCoverLetter: setCoverL,
+      cv, dispatch, template, setTemplate, coverLetter, setCoverLetter,
       activeSection, setActiveSection, sectionOrder, setSectionOrder,
       undo, redo, canUndo: historyIndex > 0, canRedo: historyIndex < history.length - 1,
       versionName, setVersionName, versions, loadVersion, saveVersion, deleteVersion, renameVersion, refreshVersions,
@@ -262,6 +262,7 @@ export function useCV() {
   if (!ctx) throw new Error('useCV must be used within CVProvider');
   return ctx;
 }
+
 
 
 
