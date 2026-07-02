@@ -45,7 +45,7 @@ export function Toolbar({ saved }: ToolbarProps) {
       {/* Version controls - compact on mobile */}
       <select value={versionName} onChange={(e) => { setVersionName(e.target.value); loadVersion(e.target.value); }}
         className="text-[11px] border border-slate-200 rounded-lg px-1.5 py-1.5 bg-white text-slate-600 max-w-[90px] sm:max-w-[120px] truncate focus:outline-none shrink-0">
-        {versions.length === 0 && <option value="default">預設</option>}
+        <option value="default">預設版本</option>
         {versions.map((v) => <option key={v} value={v}>{v}</option>)}
       </select>
       <button onClick={handleNewVersion} className="text-[11px] px-1.5 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 font-medium shrink-0 hidden sm:block">
@@ -73,3 +73,4 @@ export function Toolbar({ saved }: ToolbarProps) {
     </div>
   );
 }
+
