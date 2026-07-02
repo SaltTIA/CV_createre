@@ -173,6 +173,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => { localStorage.setItem('cv-template', JSON.stringify(template)); }, [template]);
   useEffect(() => { localStorage.setItem('cv-section-order', JSON.stringify(sectionOrder)); }, [sectionOrder]);
 
+  const [versionRefresh, setVersionRefresh] = React.useState(0);
   const versions = useMemo(() => {
     try { return Object.keys(localStorage).filter(k => k.startsWith('cv-version-')).map(k => k.replace('cv-version-', '')); }
     catch { return []; }
@@ -185,11 +186,11 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const saveVersion = useCallback((name: string) => {
-    localStorage.setItem('cv-version-' + name, JSON.stringify(cv));
+    localStorage.setItem('cv-version-' + name, JSON.stringify(cv)); setVersionRefresh(v => v + 1);
   }, [cv]);
 
   const deleteVersion = useCallback((name: string) => {
-    localStorage.removeItem('cv-version-' + name);
+    localStorage.removeItem('cv-version-' + name); setVersionRefresh(v => v + 1);
   }, []);
 
   const undo = useCallback(() => {
@@ -228,6 +229,7 @@ export function useCV() {
   if (!ctx) throw new Error('useCV must be used within CVProvider');
   return ctx;
 }
+
 
 
 
