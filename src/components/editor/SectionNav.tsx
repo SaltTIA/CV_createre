@@ -36,7 +36,7 @@ export function SectionNav({ sections, active, onSelect, onReorder }: SectionNav
               }`}>
               {sectionLabels[key] || key}
             </button>
-            <div className={`flex flex-col rounded-r-md overflow-hidden ${active === key ? 'bg-blue-700' : 'bg-white border border-l-0 border-slate-200'}`}>
+            <div className={`flex flex-col rounded-r-md overflow-hidden ${'bg-white border border-l-0 border-slate-200'}`}>
               <button onClick={(e) => { e.stopPropagation(); moveUp(i); }} disabled={i === 0}
                 className="px-1.5 py-0.5 hover:bg-slate-100 disabled:opacity-15 cursor-pointer transition-colors">
                 <ChevronUp size={13} />
@@ -59,3 +59,4 @@ export function SectionNav({ sections, active, onSelect, onReorder }: SectionNav
     </div>
   );
 }
+
