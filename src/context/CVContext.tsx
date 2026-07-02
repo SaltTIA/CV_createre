@@ -178,7 +178,6 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     try { return Object.keys(localStorage).filter(k => k.startsWith('cv-version-')).map(k => k.replace('cv-version-', '')); }
     catch { return []; }
   }, [versionRefresh]);
-  }, []);
 
   const loadVersion = useCallback((name: string) => {
     const data = loadStorage('cv-version-' + name, null);
@@ -230,6 +229,8 @@ export function useCV() {
   if (!ctx) throw new Error('useCV must be used within CVProvider');
   return ctx;
 }
+
+
 
 
 
