@@ -14,7 +14,7 @@ const PROFICIENCY_LEVELS: { value: Proficiency; label: string }[] = [
 interface Props { onComplete: () => void; }
 
 export function OnboardingWizard({ onComplete }: Props) {
-  const { dispatch, setActiveSection, setTemplate, template, saveVersion, setVersionName } = useCV();
+  const { dispatch, setActiveSection, setTemplate, template, setVersionName } = useCV();
   const [step, setStep] = useState(-1);
 
   const [fullName, setFullName] = useState('');
@@ -27,6 +27,7 @@ export function OnboardingWizard({ onComplete }: Props) {
   const [summary, setSummary] = useState('');
   const [skillInput, setSkillInput] = useState('');
   const [certName, setCertName] = useState('');
+  const [versionNameInput, setVersionNameInput] = useState('');
 
   // Multi-entry states
   const [experiences, setExperiences] = useState([{ company: '', title: '' }]);
@@ -38,8 +39,8 @@ export function OnboardingWizard({ onComplete }: Props) {
 
   const finish = () => {
     const now = new Date();
-    const versionLabel = 'CV ' + now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
-    
+    const defaultName = 'CV ' + now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+    const versionLabel = versionNameInput.trim() || defaultName;
     const newCV = {
       personal: { fullName, email, phone, location, linkedIn: linkedIn || undefined, portfolio: portfolio || undefined, photo: photo || undefined },
       summary,
@@ -51,15 +52,10 @@ export function OnboardingWizard({ onComplete }: Props) {
       projects: [],
       customSections: [],
     };
-    
-    // Save as new version, then load it
+    localStorage.setItem('cv-version-' + versionLabel, JSON.stringify(newCV));
     dispatch({ type: 'LOAD_CV', payload: newCV });
     setActiveSection('personal');
-    // Use setTimeout to ensure state has updated before saving
-    setTimeout(() => {
-      saveVersion(versionLabel);
-      setVersionName(versionLabel);
-    }, 50);
+    setVersionName(versionLabel);
     onComplete();
   };
 
@@ -229,7 +225,11 @@ export function OnboardingWizard({ onComplete }: Props) {
       );
       case 7: return (
         <div className="space-y-4">
-          <h2 className="text-xl font-bold text-slate-800">選擇模板</h2>
+          <h2 className="text-xl font-bold text-slate-800">命名及選擇模板</h2>
+          <p className="text-sm text-slate-500">為這份 CV 取個名字，方便日後辨識</p>
+          <WizInput label="CV 名稱" value={versionNameInput} onChange={setVersionNameInput} placeholder="e.g. 申請Google用" />
+          <div className="h-3" />
+          <p className="text-sm text-slate-400">選擇模板風格：</p>
           <p className="text-sm text-slate-500">隨時可以在編輯器中更換</p>
           <div className="grid gap-3">
             {[
@@ -292,5 +292,7 @@ function WizInput({ label, value, onChange, placeholder, type = 'text' }: {
     </div>
   );
 }
+
+
 
 
