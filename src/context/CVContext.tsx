@@ -143,8 +143,9 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     if (skipHistoryRef.current) {
       skipHistoryRef.current = false;
       return;
+  const [versionName, setVersionName] = React.useState('default');
+  useEffect(() => { localStorage.setItem(getCLKey(versionName), JSON.stringify(coverLetter)); }, [coverLetter, versionName]);
     }
-    setHistory(prev => {
       const next = [...prev, cv];
       return next.length > 50 ? next.slice(-50) : next;
     });
@@ -169,7 +170,6 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   const [sectionOrder, setSectionOrder] = React.useState<SectionKey[]>(() =>
     loadStorage('cv-section-order', DEFAULT_SECTION_ORDER)
   );
-  const [versionName, setVersionName] = React.useState('default');
 
     useEffect(() => {
     if (versionName === 'default') {
@@ -179,9 +179,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     }
   }, [cv, versionName]);
   useEffect(() => { localStorage.setItem('cv-template', JSON.stringify(template)); }, [template]);
-  useEffect(() => { localStorage.setItem(getCLKey(versionName), JSON.stringify(coverLetter)); }, [coverLetter, versionName]);
   useEffect(() => { localStorage.setItem('cv-section-order', JSON.stringify(sectionOrder)); }, [sectionOrder]);
-
   const [versionRefresh, setVersionRefresh] = React.useState(0);
   const versions = useMemo(() => {
     try { return Object.keys(localStorage).filter(k => k.startsWith('cv-version-')).map(k => k.replace('cv-version-', '')); }
