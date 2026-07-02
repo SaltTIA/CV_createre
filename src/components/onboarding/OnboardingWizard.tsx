@@ -42,6 +42,7 @@ export function OnboardingWizard({ onComplete }: Props) {
   const currentStep = step + 1; // 1-indexed for display
 
   const finish = () => {
+    setActiveSection('personal');
     // Save all data via dispatch
     dispatch({ type: 'SET_PERSONAL', payload: { fullName, email, phone, location, linkedIn: linkedIn || undefined } });
     if (summary) dispatch({ type: 'SET_SUMMARY', payload: summary });
@@ -271,3 +272,4 @@ function Input({ label, value, onChange, placeholder, type = 'text' }: {
     </div>
   );
 }
+
