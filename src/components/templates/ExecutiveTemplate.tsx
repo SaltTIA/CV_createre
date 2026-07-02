@@ -5,17 +5,23 @@ function fmt(d: string): string { if (!d) return ''; const [y,m]=d.split('-'); r
 
 interface Props { cv: CVData; template: TemplateSettings; sectionOrder: SectionKey[]; }
 
+function renderSection(key: SectionKey, cv: CVData, accentColor: string) {
+  const { personal, summary, experiences, education, skills, languages, certifications, projects, customSections } = cv;
+  switch (key) {
+    case 'personal': return <div key="p" className="text-center mb-6"><h1 className="text-[20pt] font-serif font-bold text-slate-800 tracking-wide">{personal.fullName}</h1><div className="text-[9pt] text-slate-500 mt-2 tracking-wider">{personal.email} &middot; {personal.phone} &middot; {personal.location}{personal.linkedIn&&' &middot; '+personal.linkedIn}</div></div>;
+    case 'summary': return summary ? <div key="s" className="mb-5"><div className="h-px bg-slate-200 mb-4" /><p className="text-[9.5pt] text-slate-600 text-center italic">{summary}</p><div className="h-px bg-slate-200 mt-4" /></div> : null;
+    case 'experiences': return experiences.length>0 ? <div key="e" className="mb-5"><h2 className="text-[10pt] font-serif font-bold uppercase tracking-[0.15em] mb-3 text-center" style={{color:accentColor}}>Experience</h2>{experiences.map((exp,i)=><div key={i} className="mb-4 text-center"><div className="font-serif font-semibold text-slate-800 text-[10pt]">{exp.title}</div><div className="text-[8.5pt] text-slate-500">{exp.company} &middot; {fmt(exp.startDate)} – {exp.current?'Present':fmt(exp.endDate||'')}</div>{exp.description&&<ul className="mt-1 space-y-0 list-disc list-inside text-[8.5pt] text-slate-600 mx-auto max-w-md">{exp.description.split('\n').filter(Boolean).map((l,j)=><li key={j}>{l}</li>)}</ul>}</div>)}</div> : null;
+    case 'education': return education.length>0 ? <div key="ed" className="mb-5"><h2 className="text-[10pt] font-serif font-bold uppercase tracking-[0.15em] mb-3 text-center" style={{color:accentColor}}>Education</h2>{education.map((edu,i)=><div key={i} className="mb-2 text-center"><div className="font-serif font-semibold text-slate-800">{edu.school}</div><div className="text-[8.5pt] text-slate-500">{edu.degree} in {edu.field} &middot; {fmt(edu.startDate)} – {edu.endDate?fmt(edu.endDate):'Present'}</div></div>)}</div> : null;
+    case 'skills': return skills.length>0 ? <div key="sk" className="mb-5"><h2 className="text-[10pt] font-serif font-bold uppercase tracking-[0.15em] mb-2 text-center" style={{color:accentColor}}>Skills</h2><div className="text-center text-[9pt] text-slate-600">{skills.map((s,i)=><span key={i} className="mx-3"><span className="font-semibold">{s.category}:</span> {s.items}</span>)}</div></div> : null;
+    case 'languages': return languages.length>0 ? <div key="la" className="mb-5"><h2 className="text-[10pt] font-serif font-bold uppercase tracking-[0.15em] mb-2 text-center" style={{color:accentColor}}>Languages</h2><div className="text-center text-[9pt] text-slate-600">{languages.map((l,i)=><span key={i} className="mx-3">{l.language} – {l.proficiency}</span>)}</div></div> : null;
+    case 'certifications': return certifications.length>0 ? <div key="ce" className="mb-5"><h2 className="text-[10pt] font-serif font-bold uppercase tracking-[0.15em] mb-2 text-center" style={{color:accentColor}}>Certifications</h2>{certifications.map((c,i)=><div key={i} className="text-center text-[8.5pt] text-slate-600 mb-1">{c.name} – {c.issuer} ({fmt(c.date)})</div>)}</div> : null;
+    case 'projects': return projects.length>0 ? <div key="pr" className="mb-5"><h2 className="text-[10pt] font-serif font-bold uppercase tracking-[0.15em] mb-2 text-center" style={{color:accentColor}}>Projects</h2>{projects.map((p,i)=><div key={i} className="text-center mb-1"><span className="font-semibold text-slate-800">{p.name}</span>{p.description&&<p className="text-[8.5pt] text-slate-600">{p.description}</p>}</div>)}</div> : null;
+    case 'custom': return customSections.map((s,i)=><div key={'c'+i} className="mb-5"><h2 className="text-[10pt] font-serif font-bold uppercase tracking-[0.15em] mb-2 text-center" style={{color:accentColor}}>{s.title}</h2>{s.items.map((it,j)=><div key={j} className="text-center text-[8.5pt] text-slate-600"><span className="font-semibold">{it.heading}</span> – {it.detail}</div>)}</div>);
+    default: return null;
+  }
+}
+
 export function ExecutiveTemplate({ cv, template, sectionOrder }: Props) {
-  const { personal, summary, experiences, education, skills, languages } = cv;
   const accentColor = template.accentColor;
-  return (
-    <div className="h-full min-h-[297mm] p-10 text-[10pt] text-slate-700">
-      <h1 className="text-[18pt] font-bold text-slate-800 mb-1">{personal.fullName}</h1>
-      <div className="text-[8.5pt] text-slate-500 mb-6">{personal.email} {personal.phone && '| '+personal.phone} {personal.location && '| '+personal.location}</div>
-      {summary && <p className="mb-5 text-[9pt] text-slate-600">{summary}</p>}
-      {experiences.length>0 && <div className="mb-5"><h2 className="text-[10pt] font-bold uppercase tracking-wider mb-2" style={{color:accentColor}}>Experience</h2>{experiences.map((exp,i)=><div key={i} className="mb-3"><div className="flex justify-between"><span className="font-semibold text-slate-800">{exp.title} – {exp.company}</span><span className="text-[8pt] text-slate-400">{fmt(exp.startDate)} – {exp.current?'Present':fmt(exp.endDate||'')}</span></div>{exp.description&&<ul className="mt-1 space-y-0.5 list-disc list-inside text-[9pt] text-slate-600">{exp.description.split('\n').filter(Boolean).map((l,j)=><li key={j}>{l}</li>)}</ul>}</div>)}</div>}
-      {education.length>0 && <div className="mb-5"><h2 className="text-[10pt] font-bold uppercase tracking-wider mb-2" style={{color:accentColor}}>Education</h2>{education.map((edu,i)=><div key={i} className="mb-2"><div className="flex justify-between"><span className="font-semibold text-slate-800">{edu.school}</span><span className="text-[8pt] text-slate-400">{fmt(edu.startDate)} – {edu.endDate?fmt(edu.endDate):'Present'}</span></div><div className="text-[9pt] text-slate-500">{edu.degree} in {edu.field}</div></div>)}</div>}
-      {skills.length>0 && <div><h2 className="text-[10pt] font-bold uppercase tracking-wider mb-2" style={{color:accentColor}}>Skills</h2>{skills.map((s,i)=><span key={i} className="mr-3 text-[9pt] text-slate-600">{s.category}: {s.items}</span>)}</div>}
-    </div>
-  );
+  return <div className="h-full min-h-[297mm] p-10 text-[10pt] text-slate-700">{sectionOrder.map(k => renderSection(k, cv, accentColor))}</div>;
 }
