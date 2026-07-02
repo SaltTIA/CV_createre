@@ -21,7 +21,7 @@
 單頁應用，左右雙欄：
 
 - **左欄：編輯區**（繁體中文 UI）
-  - 頂部區塊導航 tabs：基本資料、簡介、經歷、學歷、技能、語言、證照、作品集（選填）、求職信
+  - 頂部區塊導航 tabs：基本資料、簡介、經歷、學歷、技能、語言、證照、作品集（選填）、自訂區塊、求職信
   - 點選切換對應表單模組，每個區塊一個獨立 Form 組件
   - 經歷、學歷、技能、語言、證照、作品集支援動態增刪多筆
 
@@ -43,6 +43,8 @@
 - languages: {language, proficiency: Native | Fluent | Advanced | Intermediate | Basic}[]
 - certifications: {name, issuer, date}[]
 - projects?: {name, url?, description}[]
+- customSections: {title: string, items: {heading: string, detail: string}[]}[]
+使用者可在編輯器中新增任意數量的自訂區塊。每個自訂區塊包含一個自訂標題（如 "Awards"、"Volunteer Experience"）和多筆條目，每筆條目有 heading（標題行）和 detail（說明行）。自訂區塊在預覽中的排版與預設區塊一致，自動排版引擎同樣涵蓋自訂區塊。
 
 ## 外部 CV 匯入
 
