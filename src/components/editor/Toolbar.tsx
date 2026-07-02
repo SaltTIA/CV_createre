@@ -3,65 +3,38 @@ import { Undo2, Redo2, Download, Home } from 'lucide-react';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-interface ToolbarProps {
-  saved: boolean;
-}
+interface ToolbarProps { saved: boolean; }
 
 export function Toolbar({ saved }: ToolbarProps) {
   const { undo, redo, canUndo, canRedo, versionName, versions, loadVersion, setVersionName } = useCV();
   const navigate = useNavigate();
 
-  const handleExport = useCallback(() => {
-    window.print();
-  }, []);
-
-  const goHome = useCallback(() => {
-    navigate('/');
-  }, [navigate]);
+  const handleExport = useCallback(() => { window.print(); }, []);
+  const goHome = useCallback(() => { navigate('/'); }, [navigate]);
 
   return (
-    <div className="h-12 bg-white border-b border-slate-200 flex items-center px-4 gap-2 shrink-0">
-      {/* Home */}
-      <button onClick={goHome} className="p-1.5 rounded hover:bg-slate-100" title="返回首頁">
-        <Home size={18} />
+    <div className="h-12 bg-white/80 backdrop-blur-sm border-b border-slate-200/80 flex items-center px-4 gap-1.5 shrink-0">
+      <button onClick={goHome} className="p-2 rounded-lg hover:bg-slate-100 transition-colors" title="返回首頁">
+        <Home size={17} className="text-slate-500" />
       </button>
-
       <div className="w-px h-5 bg-slate-200 mx-1" />
-
-      {/* Undo / Redo */}
-      <button onClick={undo} disabled={!canUndo} className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-30" title="復原 Ctrl+Z">
-        <Undo2 size={18} />
+      <button onClick={undo} disabled={!canUndo} className="p-2 rounded-lg hover:bg-slate-100 disabled:opacity-25 transition-colors" title="復原">
+        <Undo2 size={17} className="text-slate-500" />
       </button>
-      <button onClick={redo} disabled={!canRedo} className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-30" title="重做 Ctrl+Y">
-        <Redo2 size={18} />
+      <button onClick={redo} disabled={!canRedo} className="p-2 rounded-lg hover:bg-slate-100 disabled:opacity-25 transition-colors" title="重做">
+        <Redo2 size={17} className="text-slate-500" />
       </button>
-
       <div className="w-px h-5 bg-slate-200 mx-1" />
-
-      {/* Version selector */}
-      <select
-        value={versionName}
-        onChange={(e) => { setVersionName(e.target.value); loadVersion(e.target.value); }}
-        className="text-sm border border-slate-200 rounded px-2 py-1 bg-white"
-      >
+      <select value={versionName} onChange={(e) => { setVersionName(e.target.value); loadVersion(e.target.value); }}
+        className="text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 bg-white text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
         <option value="default">預設版本</option>
-        {versions.map((v) => (
-          <option key={v} value={v}>{v}</option>
-        ))}
+        {versions.map((v) => <option key={v} value={v}>{v}</option>)}
       </select>
-
       <div className="flex-1" />
-
-      {/* Save status */}
-      <span className="text-xs text-slate-400">{saved ? '已儲存' : '儲存中…'}</span>
-
-      {/* Export */}
-      <button
-        onClick={handleExport}
-        className="flex items-center gap-1.5 text-sm bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700 cursor-pointer"
-      >
-        <Download size={16} />
-        匯出 PDF
+      <span className="text-xs text-slate-400">{saved ? '✓ 已儲存' : '儲存中…'}</span>
+      <button onClick={handleExport}
+        className="flex items-center gap-1.5 text-sm bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700 shadow-sm shadow-blue-200 transition-all font-medium cursor-pointer">
+        <Download size={15} /> 匯出 PDF
       </button>
     </div>
   );
