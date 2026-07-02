@@ -1,24 +1,34 @@
-﻿import { CVProvider, useCV } from './context/CVContext';
+﻿import { CVProvider } from './context/CVContext';
 import { EditorLayout } from './components/editor/EditorLayout';
 import { OnboardingWizard } from './components/onboarding/OnboardingWizard';
-import { useState, useEffect } from 'react';
+import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
-function AppContent() {
-  const [showOnboarding, setShowOnboarding] = useState(false);
-
+function OnboardingPage() {
+  const navigate = useNavigate();
   useEffect(() => {
     const onboarded = localStorage.getItem('cv-onboarded');
-    if (!onboarded) setShowOnboarding(true);
-  }, []);
+    if (onboarded) {
+      navigate('/editor', { replace: true });
+    }
+  }, [navigate]);
 
   const handleComplete = () => {
     localStorage.setItem('cv-onboarded', 'true');
-    setShowOnboarding(false);
+    navigate('/editor');
   };
 
-  if (showOnboarding) {
-    return <OnboardingWizard onComplete={handleComplete} />;
-  }
+  return <OnboardingWizard onComplete={handleComplete} />;
+}
+
+function EditorPage() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const onboarded = localStorage.getItem('cv-onboarded');
+    if (!onboarded) {
+      navigate('/', { replace: true });
+    }
+  }, [navigate]);
 
   return <EditorLayout />;
 }
@@ -26,7 +36,12 @@ function AppContent() {
 function App() {
   return (
     <CVProvider>
-      <AppContent />
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<OnboardingPage />} />
+          <Route path="/editor" element={<EditorPage />} />
+        </Routes>
+      </HashRouter>
     </CVProvider>
   );
 }

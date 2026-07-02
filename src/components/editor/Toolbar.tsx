@@ -1,6 +1,7 @@
 ﻿import { useCV } from '../../context/CVContext';
 import { Undo2, Redo2, Download, Home } from 'lucide-react';
 import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface ToolbarProps {
   saved: boolean;
@@ -8,15 +9,15 @@ interface ToolbarProps {
 
 export function Toolbar({ saved }: ToolbarProps) {
   const { undo, redo, canUndo, canRedo, versionName, versions, loadVersion, setVersionName } = useCV();
+  const navigate = useNavigate();
 
   const handleExport = useCallback(() => {
     window.print();
   }, []);
 
   const goHome = useCallback(() => {
-    localStorage.removeItem('cv-onboarded');
-    window.location.reload();
-  }, []);
+    navigate('/');
+  }, [navigate]);
 
   return (
     <div className="h-12 bg-white border-b border-slate-200 flex items-center px-4 gap-2 shrink-0">
