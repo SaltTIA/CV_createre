@@ -30,13 +30,13 @@ export function ExperienceForm() {
               <label className="block text-xs font-medium text-slate-600 mb-1">公司</label>
               <input value={exp.company} onChange={(e) => dispatch({ type: 'UPDATE_EXPERIENCE', index: i, payload: { company: e.target.value } })}
                 placeholder="e.g. TechCorp Ltd" spellCheck
-                className="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                className="w-full border border-slate-200 rounded px-2 py-2.5 md:py-2 md:py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">職位</label>
               <input value={exp.title} onChange={(e) => dispatch({ type: 'UPDATE_EXPERIENCE', index: i, payload: { title: e.target.value } })}
                 placeholder="e.g. Senior Frontend Engineer" spellCheck
-                className="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                className="w-full border border-slate-200 rounded px-2 py-2.5 md:py-2 md:py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
           </div>
 
@@ -44,13 +44,13 @@ export function ExperienceForm() {
             <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">開始日期</label>
               <input type="month" value={exp.startDate} onChange={(e) => dispatch({ type: 'UPDATE_EXPERIENCE', index: i, payload: { startDate: e.target.value } })}
-                className="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                className="w-full border border-slate-200 rounded px-2 py-2.5 md:py-2 md:py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">結束日期</label>
               <input type="month" value={exp.endDate || ''} onChange={(e) => dispatch({ type: 'UPDATE_EXPERIENCE', index: i, payload: { endDate: e.target.value } })}
                 disabled={exp.current}
-                className="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50" />
+                className="w-full border border-slate-200 rounded px-2 py-2.5 md:py-2 md:py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50" />
             </div>
           </div>
 
@@ -65,10 +65,11 @@ export function ExperienceForm() {
             <textarea value={exp.description} onChange={(e) => dispatch({ type: 'UPDATE_EXPERIENCE', index: i, payload: { description: e.target.value } })}
               placeholder={"e.g. Led migration to React/TypeScript\nReduced bundle size by 40%"}
               spellCheck rows={3}
-              className="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
+              className="w-full border border-slate-200 rounded px-2 py-2.5 md:py-2 md:py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
           </div>
         </div>
       ))}
     </div>
   );
 }
+

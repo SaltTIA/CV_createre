@@ -20,22 +20,23 @@ export function ProjectsForm() {
             <label className="block text-xs font-medium text-slate-600 mb-1">作品名稱</label>
             <input value={proj.name} onChange={(e) => dispatch({ type: 'UPDATE_PROJECT', index: i, payload: { name: e.target.value } })}
               placeholder="e.g. OpenCV Editor" spellCheck
-              className="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              className="w-full border border-slate-200 rounded px-2 py-2.5 md:py-2 md:py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
           <div>
             <label className="block text-xs font-medium text-slate-600 mb-1">連結（選填）</label>
             <input value={proj.url || ''} onChange={(e) => dispatch({ type: 'UPDATE_PROJECT', index: i, payload: { url: e.target.value } })}
               placeholder="e.g. github.com/..." spellCheck
-              className="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              className="w-full border border-slate-200 rounded px-2 py-2.5 md:py-2 md:py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
           <div>
             <label className="block text-xs font-medium text-slate-600 mb-1">描述</label>
             <textarea value={proj.description} onChange={(e) => dispatch({ type: 'UPDATE_PROJECT', index: i, payload: { description: e.target.value } })}
               placeholder="Brief description of the project" spellCheck rows={3}
-              className="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
+              className="w-full border border-slate-200 rounded px-2 py-2.5 md:py-2 md:py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
           </div>
         </div>
       ))}
     </div>
   );
 }
+

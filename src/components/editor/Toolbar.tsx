@@ -13,7 +13,7 @@ export function Toolbar({ saved }: ToolbarProps) {
   const goHome = useCallback(() => { navigate('/'); }, [navigate]);
 
   return (
-    <div className="h-12 bg-white/80 backdrop-blur-sm border-b border-slate-200/80 flex items-center px-4 gap-1.5 shrink-0">
+    <div className="h-12 bg-white/80 backdrop-blur-sm border-b border-slate-200/80 flex items-center px-3 md:px-4 flex-wrap gap-y-1 gap-1.5 shrink-0">
       <button onClick={goHome} className="p-2 rounded-lg hover:bg-slate-100 transition-colors" title="返回首頁">
         <Home size={17} className="text-slate-500" />
       </button>
@@ -39,3 +39,4 @@ export function Toolbar({ saved }: ToolbarProps) {
     </div>
   );
 }
+

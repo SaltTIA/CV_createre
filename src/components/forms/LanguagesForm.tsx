@@ -27,9 +27,9 @@ export function LanguagesForm() {
           </button>
           <input value={lang.language} onChange={(e) => dispatch({ type: 'UPDATE_LANGUAGE', index: i, payload: { language: e.target.value } })}
             placeholder="e.g. English" spellCheck
-            className="flex-1 border border-slate-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            className="flex-1 border border-slate-200 rounded px-2 py-2.5 md:py-2 md:py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
           <select value={lang.proficiency} onChange={(e) => dispatch({ type: 'UPDATE_LANGUAGE', index: i, payload: { proficiency: e.target.value as Proficiency } })}
-            className="border border-slate-200 rounded px-2 py-1.5 text-sm">
+            className="border border-slate-200 rounded px-2 py-2.5 md:py-2 md:py-1.5 text-sm">
             {LEVELS.map(l => <option key={l.value} value={l.value}>{l.label}</option>)}
           </select>
         </div>
@@ -37,3 +37,4 @@ export function LanguagesForm() {
     </div>
   );
 }
+

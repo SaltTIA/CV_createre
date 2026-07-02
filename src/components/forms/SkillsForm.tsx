@@ -20,16 +20,17 @@ export function SkillsForm() {
             <label className="block text-xs font-medium text-slate-600 mb-1">類別</label>
             <input value={s.category} onChange={(e) => dispatch({ type: 'UPDATE_SKILL', index: i, payload: { category: e.target.value } })}
               placeholder="e.g. Programming" spellCheck
-              className="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              className="w-full border border-slate-200 rounded px-2 py-2.5 md:py-2 md:py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
           <div>
             <label className="block text-xs font-medium text-slate-600 mb-1">技能內容（逗號分隔）</label>
             <input value={s.items} onChange={(e) => dispatch({ type: 'UPDATE_SKILL', index: i, payload: { items: e.target.value } })}
               placeholder="e.g. TypeScript, Python, SQL" spellCheck
-              className="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              className="w-full border border-slate-200 rounded px-2 py-2.5 md:py-2 md:py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
         </div>
       ))}
     </div>
   );
 }
+

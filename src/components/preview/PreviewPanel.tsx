@@ -26,7 +26,7 @@ export function PreviewPanel() {
       <div
         id="cv-preview"
         style={{ fontFamily } as React.CSSProperties}
-        className="w-[210mm] min-h-[297mm] bg-white shadow-xl shadow-slate-300/50 ring-1 ring-slate-900/5 overflow-hidden"
+        className="w-full max-w-[210mm] min-h-[297mm] md:w-[210mm] bg-white shadow-xl shadow-slate-300/50 ring-1 ring-slate-900/5 overflow-hidden"
       >
         {isCoverLetter ? (
           <CoverLetterPreview
@@ -52,4 +52,5 @@ export function PreviewPanel() {
     </div>
   );
 }
+
 

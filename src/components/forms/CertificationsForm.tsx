@@ -21,22 +21,23 @@ export function CertificationsForm() {
               <label className="block text-xs font-medium text-slate-600 mb-1">證照名稱</label>
               <input value={cert.name} onChange={(e) => dispatch({ type: 'UPDATE_CERTIFICATION', index: i, payload: { name: e.target.value } })}
                 placeholder="e.g. AWS Solutions Architect" spellCheck
-                className="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                className="w-full border border-slate-200 rounded px-2 py-2.5 md:py-2 md:py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">頒發機構</label>
               <input value={cert.issuer} onChange={(e) => dispatch({ type: 'UPDATE_CERTIFICATION', index: i, payload: { issuer: e.target.value } })}
                 placeholder="e.g. Amazon Web Services" spellCheck
-                className="w-full border border-slate-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                className="w-full border border-slate-200 rounded px-2 py-2.5 md:py-2 md:py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
           </div>
           <div>
             <label className="block text-xs font-medium text-slate-600 mb-1">取得日期</label>
             <input type="month" value={cert.date} onChange={(e) => dispatch({ type: 'UPDATE_CERTIFICATION', index: i, payload: { date: e.target.value } })}
-              className="border border-slate-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              className="border border-slate-200 rounded px-2 py-2.5 md:py-2 md:py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
         </div>
       ))}
     </div>
   );
 }
+
