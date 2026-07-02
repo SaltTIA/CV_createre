@@ -177,6 +177,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   const versions = useMemo(() => {
     try { return Object.keys(localStorage).filter(k => k.startsWith('cv-version-')).map(k => k.replace('cv-version-', '')); }
     catch { return []; }
+  }, [versionRefresh]);
   }, []);
 
   const loadVersion = useCallback((name: string) => {
@@ -229,6 +230,7 @@ export function useCV() {
   if (!ctx) throw new Error('useCV must be used within CVProvider');
   return ctx;
 }
+
 
 
 

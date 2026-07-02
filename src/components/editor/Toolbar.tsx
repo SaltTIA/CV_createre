@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 interface ToolbarProps { saved: boolean; }
 
 export function Toolbar({ saved }: ToolbarProps) {
-  const { undo, redo, canUndo, canRedo, versionName, versions, loadVersion, saveVersion, setVersionName } = useCV();
+  const { undo, redo, canUndo, canRedo, versionName, versions, loadVersion, saveVersion, deleteVersion, setVersionName } = useCV();
   const navigate = useNavigate();
 
   const handleExport = useCallback(() => {
@@ -49,6 +49,7 @@ export function Toolbar({ saved }: ToolbarProps) {
         {versions.length === 0 && <option value="default">預設版本</option>}
         {versions.map((v) => <option key={v} value={v}>{v}</option>)}
       </select>
+      {versionName !== "default" && <button onClick={() => { if (confirm("確定刪除版本 «${versionName}»？")) { deleteVersion(versionName); setVersionName("default"); loadVersion("default"); } }} className="text-xs px-2 py-1 rounded-lg text-red-500 hover:bg-red-50 transition-colors font-medium" title="刪除版本">刪除</button>}
       <button onClick={handleNewVersion}
         className="text-xs px-2 py-1 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors font-medium shrink-0" title="新增版本">
         + 新增
@@ -62,3 +63,4 @@ export function Toolbar({ saved }: ToolbarProps) {
     </div>
   );
 }
+
