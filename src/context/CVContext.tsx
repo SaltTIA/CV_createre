@@ -161,7 +161,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   );
   const [coverLetter, setCoverL] = React.useState<CoverLetter>(() =>
     loadStorage('cv-cover-letter', {
-      companyName: '', jobTitle: '', tone: 'professional' as const,
+      companyName: '', jobTitle: '', recipientName: '', companyAddress: '', subject: '', tone: 'professional' as const, greeting: '',
       opening: '', body: '', closing: '',
     })
   );
@@ -260,6 +260,7 @@ export function useCV() {
   if (!ctx) throw new Error('useCV must be used within CVProvider');
   return ctx;
 }
+
 
 
 

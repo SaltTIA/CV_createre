@@ -58,7 +58,7 @@ export interface CustomSection {
 export interface CoverLetter {
   companyName: string;
   jobTitle: string;
-  tone: 'professional' | 'enthusiastic' | 'concise' | 'academic';
+  tone: 'professional' ||| 'academic';
   opening: string;
   body: string;
   closing: string;
@@ -133,6 +133,7 @@ export type CVAction =
   | { type: 'REMOVE_CUSTOM_ITEM'; sectionIndex: number; itemIndex: number }
   | { type: 'LOAD_CV'; payload: CVData }
   | { type: 'RESET_CV' };
+
 
 
 
