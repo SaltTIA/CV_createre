@@ -142,7 +142,7 @@ export function PersonalForm() {
       <Field label="姓名" value={personal.fullName} onChange={(v) => update('fullName', v)} placeholder="e.g. Alex Chen" />
       <Field label="Email" value={personal.email} onChange={(v) => update('email', v)} placeholder="e.g. alex@email.com" type="email" />
       <Field label="電話" value={personal.phone} onChange={(v) => update('phone', v)} placeholder="e.g. +852 1234 5678" />
-      <Field label="地址" value={personal.location} onChange={(v) => update('location', v)} placeholder="e.g. Hong Kong" />
+      <Field label="地址" value={personal.location} onChange={(v) => update('location', v)} placeholder="e.g. 123 Main St, Kowloon, Hong Kong" />
       <Field label="LinkedIn（選填）" value={personal.linkedIn || ''} onChange={(v) => update('linkedIn', v)} placeholder="e.g. linkedin.com/in/alex" />
       <Field label="作品集網站（選填）" value={personal.portfolio || ''} onChange={(v) => update('portfolio', v)} placeholder="e.g. alexchen.dev" />
     </div>
@@ -166,6 +166,7 @@ function Field({ label, value, onChange, placeholder, type = 'text' }: {
     </div>
   );
 }
+
 
 
 

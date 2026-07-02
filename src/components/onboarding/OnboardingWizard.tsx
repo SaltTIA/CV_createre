@@ -116,7 +116,7 @@ export function OnboardingWizard({ onComplete }: Props) {
           <WizInput label="Email *" value={email} onChange={setEmail} placeholder="e.g. alex@email.com" type="email" />
           <div className="grid grid-cols-2 gap-3">
             <WizInput label="電話" value={phone} onChange={setPhone} placeholder="+852 1234 5678" />
-            <WizInput label="地點" value={location} onChange={setLocation} placeholder="Hong Kong" />
+            <WizInput label="地址" value={location} onChange={setLocation} placeholder="e.g. 123 Main St, Kowloon, Hong Kong" />
           </div>
           <WizInput label="LinkedIn (選填)" value={linkedIn} onChange={setLinkedIn} placeholder="linkedin.com/in/alex" />
           <WizInput label="作品集網站 (選填)" value={portfolio} onChange={setPortfolio} placeholder="alexchen.dev" />
@@ -365,6 +365,7 @@ function WizInput({ label, value, onChange, placeholder, type = 'text' }: {
     </div>
   );
 }
+
 
 
 

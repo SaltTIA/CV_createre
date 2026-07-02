@@ -5,7 +5,7 @@ export const sampleCV: CVData = {
     fullName: 'Alex Chen',
     email: 'alex.chen@email.com',
     phone: '+852 1234 5678',
-    location: 'Hong Kong',
+    location: '123 Innovation Road, Kowloon, Hong Kong',
     linkedIn: 'linkedin.com/in/alexchen',
     portfolio: 'alexchen.dev',
     photo: '',
@@ -56,3 +56,4 @@ export const sampleCV: CVData = {
   ],
   customSections: [],
 };
+
