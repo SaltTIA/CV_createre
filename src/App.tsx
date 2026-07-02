@@ -11,13 +11,13 @@ function AppContent() {
     if (!onboarded) setShowOnboarding(true);
   }, []);
 
-  const handleSkip = () => {
+  const handleComplete = () => {
     localStorage.setItem('cv-onboarded', 'true');
     setShowOnboarding(false);
   };
 
   if (showOnboarding) {
-    return <OnboardingWizard onComplete={handleSkip} onSkip={handleSkip} />;
+    return <OnboardingWizard onComplete={handleComplete} />;
   }
 
   return <EditorLayout />;
