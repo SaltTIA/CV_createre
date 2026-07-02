@@ -232,23 +232,27 @@ export function OnboardingWizard({ onComplete }: Props) {
           <WizInput label="CV 名稱" value={versionNameInput} onChange={setVersionNameInput} placeholder="e.g. 申請Google用" />
           <div className="h-3" />
           <p className="text-sm text-slate-400">選擇模板風格：</p>
-          <p className="text-sm text-slate-500">隨時可以在編輯器中更換</p>
-          <div className="grid grid-cols-2 gap-3">
-            {[
+          <div className="grid grid-cols-2 gap-2">
+            {([
               { id: 'classic' as const, name: '傳統簡潔', desc: '側欄資訊 + 主內容' },
               { id: 'modern' as const, name: '現代緊湊', desc: '全寬，線條分隔' },
               { id: 'minimal' as const, name: '極簡黑白', desc: '無裝飾，純層次' },
               { id: 'sidebar' as const, name: '側邊色塊', desc: '深色側欄設計' },
               { id: 'double' as const, name: '雙欄緊湊', desc: '橫幅 + 雙欄' },
-            ].map(({ id, name, desc }) => (
+              { id: 'timeline' as const, name: '時間軸', desc: '左側時間線設計' },
+              { id: 'compact' as const, name: '超緊湊', desc: '高密度，節省空間' },
+              { id: 'executive' as const, name: '高管風格', desc: 'Serif，橫線分隔' },
+            ]).map(({ id, name, desc }) => (
               <button key={id} onClick={() => setTemplate({ ...template, templateId: id })}
-                className={`p-4 rounded-xl border-2 text-left transition-all ${template.templateId === id ? 'border-blue-500 bg-blue-50 shadow-md' : 'border-slate-100 hover:border-slate-300 hover:shadow-sm bg-white'}`}>
-                <div className="font-semibold text-slate-800">{name}</div><div className="w-full h-16 bg-slate-50 rounded-lg mt-2 overflow-hidden">{React.createElement(THUMBNAILS[id].thumb)}</div><div className="text-xs text-slate-500 mt-1">{desc}</div></button>
+                className={'p-3 rounded-xl border-2 text-left transition-all ' + (template.templateId === id ? 'border-blue-500 bg-blue-50 shadow-md' : 'border-slate-100 hover:border-slate-300 hover:shadow-sm bg-white')}>
+                <div className="font-semibold text-sm text-slate-800">{name}</div>
+                <div className="w-full h-10 bg-slate-100 rounded mt-1.5 flex items-center justify-center text-[9px] text-slate-300 font-medium">Preview</div>
+                <div className="text-[11px] text-slate-500 mt-1">{desc}</div>
+              </button>
             ))}
           </div>
         </div>
-      );
-      default: return null;
+      );        default: return null;
     }
   };
 
@@ -294,6 +298,7 @@ function WizInput({ label, value, onChange, placeholder, type = 'text' }: {
     </div>
   );
 }
+
 
 
 
