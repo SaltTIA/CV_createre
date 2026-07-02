@@ -6,13 +6,6 @@ import { useEffect } from 'react';
 
 function OnboardingPage() {
   const navigate = useNavigate();
-  useEffect(() => {
-    const onboarded = localStorage.getItem('cv-onboarded');
-    if (onboarded) {
-      navigate('/editor', { replace: true });
-    }
-  }, [navigate]);
-
   const handleComplete = () => {
     localStorage.setItem('cv-onboarded', 'true');
     navigate('/editor');
