@@ -18,7 +18,7 @@ export function EditorLayout() {
       <Toolbar saved={saved} />
 
       {/* Mobile toggle */}
-      <div className="md:hidden flex border-b border-slate-200 bg-white">
+      <div className="lg:hidden flex border-b border-slate-200 bg-white">
         <button onClick={() => setMobileView('form')}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium transition-colors ${
             mobileView === 'form' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500'
@@ -35,18 +35,18 @@ export function EditorLayout() {
 
       <div className="flex-1 flex overflow-hidden">
         {/* Left panel - hidden on mobile when previewing */}
-        <div className={`md:w-[420px] md:min-w-[380px] w-full flex flex-col border-r border-slate-200/80 bg-white shadow-sm z-10 ${
-          mobileView !== 'form' ? 'hidden md:flex' : 'flex'
+        <div className={`lg:w-[420px] lg:min-w-[380px] w-full flex flex-col border-r border-slate-200/80 bg-white shadow-sm z-10 ${
+          mobileView !== 'form' ? 'hidden lg:flex' : 'flex'
         }`}>
           <SectionNav sections={sectionOrder} active={activeSection} onSelect={setActiveSection} onReorder={setSectionOrder} />
-          <div className="flex-1 overflow-y-auto p-4 md:p-6">
+          <div className="flex-1 overflow-y-auto p-4 lg:p-6">
             <FormPanel section={activeSection} />
           </div>
         </div>
 
         {/* Right panel - hidden on mobile when editing */}
-        <div className={`flex-1 overflow-y-auto p-3 md:p-6 bg-slate-100 flex justify-center items-start ${
-          mobileView !== 'preview' ? 'hidden md:flex' : 'flex'
+        <div className={`flex-1 overflow-y-auto p-3 lg:p-6 bg-slate-100 flex justify-center items-start ${
+          mobileView !== 'preview' ? 'hidden lg:flex' : 'flex'
         }`}>
           <PreviewPanel />
         </div>
@@ -54,3 +54,4 @@ export function EditorLayout() {
     </div>
   );
 }
+
