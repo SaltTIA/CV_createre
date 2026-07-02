@@ -35,7 +35,8 @@
 
 所有區塊置於一棵 CV 物件樹中，由單一 reducer 管理：
 
-- personal: fullName, email, phone, location, linkedIn?, portfolio?
+- personal: fullName, email, phone, location, linkedIn?, portfolio?, photo? (base64 data URL)
+  照片為選填，透過 FileReader API 轉為 base64 存入 localStorage。上傳後在支援照片展示的模板中顯示（傳統簡潔、側邊色塊、雙欄緊湊），極簡模板預設不顯示但可由使用者自行開啟。
 - summary: string
 - experiences: {company, title, startDate, endDate?, current, description}[]
 - education: {school, degree, field, startDate, endDate?}[]
@@ -89,7 +90,7 @@ App
 
 問卷步驟（逐步單頁，可返回修改）：
 
-1. 基本資料（姓名、Email、電話、地點、LinkedIn 選填）
+1. 基本資料（姓名、Email、電話、地點、LinkedIn 選填、個人照片選填）
 2. 個人簡介
 3. 工作經歷（可逐筆新增）
 4. 學歷（可逐筆新增）
