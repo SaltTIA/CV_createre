@@ -1,12 +1,12 @@
 ﻿import { useCV } from '../../context/CVContext';
-import { Undo2, Redo2, Download, Home, Trash2 } from 'lucide-react';
+import { Undo2, Redo2, Download, Home, Trash2, Pencil } from 'lucide-react';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface ToolbarProps { saved: boolean; }
 
 export function Toolbar({ saved }: ToolbarProps) {
-  const { undo, redo, canUndo, canRedo, versionName, versions, loadVersion, saveVersion, deleteVersion, setVersionName } = useCV();
+  const { undo, redo, canUndo, canRedo, versionName, versions, loadVersion, saveVersion, deleteVersion, renameVersion, setVersionName } = useCV();
   const navigate = useNavigate();
 
   const handleExport = useCallback(() => {
@@ -26,7 +26,7 @@ export function Toolbar({ saved }: ToolbarProps) {
   const goHome = useCallback(() => { navigate('/'); }, [navigate]);
 
   const handleNewVersion = () => {
-    const name = prompt('輸入新版本名稱（e.g. 申請Google）');
+    const name = prompt('輸入新版本名稱');
     if (name && name.trim()) {
       saveVersion(name.trim());
       setVersionName(name.trim());
@@ -39,6 +39,15 @@ export function Toolbar({ saved }: ToolbarProps) {
       deleteVersion(versionName);
       setVersionName('default');
       loadVersion('default');
+    }
+  };
+
+  const handleRenameVersion = () => {
+    if (versionName === 'default') return;
+    const newName = prompt('修改版本名稱：', versionName);
+    if (newName && newName.trim() && newName.trim() !== versionName) {
+      renameVersion(versionName, newName.trim());
+      setVersionName(newName.trim());
     }
   };
 
@@ -66,10 +75,16 @@ export function Toolbar({ saved }: ToolbarProps) {
         + 新增
       </button>
       {versionName !== 'default' && (
-        <button onClick={handleDeleteVersion}
-          className="text-xs px-2 py-1 rounded-lg text-red-500 hover:bg-red-50 transition-colors font-medium shrink-0" title="刪除當前版本">
-          <Trash2 size={13} />
-        </button>
+        <>
+          <button onClick={handleRenameVersion}
+            className="text-xs px-2 py-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors font-medium shrink-0" title="修改名稱">
+            <Pencil size={13} />
+          </button>
+          <button onClick={handleDeleteVersion}
+            className="text-xs px-2 py-1 rounded-lg text-red-500 hover:bg-red-50 transition-colors font-medium shrink-0" title="刪除當前版本">
+            <Trash2 size={13} />
+          </button>
+        </>
       )}
 
       <div className="flex-1" />

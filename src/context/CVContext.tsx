@@ -98,6 +98,7 @@ interface CVContextValue {
   loadVersion: (name: string) => void;
   saveVersion: (name: string) => void;
   deleteVersion: (name: string) => void;
+  renameVersion: (oldName: string, newName: string) => void;
   refreshVersions: () => void;
   sectionConfigs: SectionConfig[];
 }
@@ -194,6 +195,15 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('cv-version-' + name); setVersionRefresh(v => v + 1);
   }, []);
 
+  const renameVersion = useCallback((oldName: string, newName: string) => {
+    const data = localStorage.getItem('cv-version-' + oldName);
+    if (data) {
+      localStorage.setItem('cv-version-' + newName, data);
+      localStorage.removeItem('cv-version-' + oldName);
+      setVersionRefresh(v => v + 1);
+    }
+  }, []);
+
   const refreshVersions = useCallback(() => {
     setVersionRefresh(v => v + 1);
   }, []);
@@ -221,7 +231,7 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
       cv, dispatch, template, setTemplate, coverLetter, setCoverLetter: setCoverL,
       activeSection, setActiveSection, sectionOrder, setSectionOrder,
       undo, redo, canUndo: historyIndex > 0, canRedo: historyIndex < history.length - 1,
-      versionName, setVersionName, versions, loadVersion, saveVersion, deleteVersion, refreshVersions,
+      versionName, setVersionName, versions, loadVersion, saveVersion, deleteVersion, renameVersion, refreshVersions,
       sectionConfigs: SECTION_CONFIGS,
     }}>
       {children}
@@ -234,6 +244,7 @@ export function useCV() {
   if (!ctx) throw new Error('useCV must be used within CVProvider');
   return ctx;
 }
+
 
 
 
