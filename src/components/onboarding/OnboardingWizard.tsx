@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import { useCV } from '../../context/CVContext';
+import { TemplateThumbnail } from '../preview/TemplateThumbnail';
 
 import { ArrowRight, ArrowLeft, Check, FileText, Pencil, Sparkles, Plus, Trash2 } from 'lucide-react';
 import type { Proficiency } from '../../types/cv';
@@ -246,7 +247,7 @@ export function OnboardingWizard({ onComplete }: Props) {
               <button key={id} onClick={() => setTemplate({ ...template, templateId: id })}
                 className={'p-3 rounded-xl border-2 text-left transition-all ' + (template.templateId === id ? 'border-blue-500 bg-blue-50 shadow-md' : 'border-slate-100 hover:border-slate-300 hover:shadow-sm bg-white')}>
                 <div className="font-semibold text-sm text-slate-800">{name}</div>
-                <div className="w-full h-10 bg-slate-100 rounded mt-1.5 flex items-center justify-center text-[9px] text-slate-300 font-medium">Preview</div>
+                <div className="w-full h-12 bg-slate-50 rounded mt-1.5 overflow-hidden"><TemplateThumbnail id={id} /></div>
                 <div className="text-[11px] text-slate-500 mt-1">{desc}</div>
               </button>
             ))}
@@ -298,6 +299,7 @@ function WizInput({ label, value, onChange, placeholder, type = 'text' }: {
     </div>
   );
 }
+
 
 
 
