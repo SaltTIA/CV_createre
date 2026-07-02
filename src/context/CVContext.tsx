@@ -171,7 +171,13 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
   );
   const [versionName, setVersionName] = React.useState('default');
 
-  useEffect(() => { localStorage.setItem('cv-data', JSON.stringify(cv)); }, [cv]);
+    useEffect(() => {
+    if (versionName === 'default') {
+      localStorage.setItem('cv-data', JSON.stringify(cv));
+    } else {
+      localStorage.setItem('cv-version-' + versionName, JSON.stringify(cv));
+    }
+  }, [cv, versionName]);
   useEffect(() => { localStorage.setItem('cv-template', JSON.stringify(template)); }, [template]);
   useEffect(() => { localStorage.setItem('cv-section-order', JSON.stringify(sectionOrder)); }, [sectionOrder]);
 
@@ -181,8 +187,10 @@ export function CVProvider({ children }: { children: React.ReactNode }) {
     catch { return []; }
   }, [versionRefresh]);
 
-  const loadVersion = useCallback((name: string) => {
-    const data = loadStorage('cv-version-' + name, null);
+    const loadVersion = useCallback((name: string) => {
+    const data = name === 'default' 
+      ? loadStorage('cv-data', sampleCV)
+      : loadStorage('cv-version-' + name, null);
     if (data) dispatch({ type: 'LOAD_CV', payload: data as CVData });
     setVersionName(name);
   }, []);
@@ -252,6 +260,7 @@ export function useCV() {
   if (!ctx) throw new Error('useCV must be used within CVProvider');
   return ctx;
 }
+
 
 
 
