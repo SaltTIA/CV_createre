@@ -19,7 +19,7 @@ export function Toolbar({ saved }: ToolbarProps) {
     const originalStyles = preview.getAttribute('style') || '';
 
     // Temporarily detach and append to body
-    preview.setAttribute('style', originalStyles + ';position:fixed!important;left:0!important;top:0!important;width:210mm!important;min-height:297mm!important;z-index:99999!important;background:white!important;box-shadow:none!important;margin:0!important;padding:0!important;');
+    preview.setAttribute('style', originalStyles + ';position:fixed!important;left:0!important;top:0!important;width:210mm!important;min-height:297mm!important;z-index:99999!important;background:white!important;box-shadow:none!important;margin:0!important;padding:0!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;');  const allEls = preview.querySelectorAll('*'); allEls.forEach(el => { const e = el as HTMLElement; e.style.setProperty('-webkit-print-color-adjust', 'exact', 'important'); e.style.setProperty('print-color-adjust', 'exact', 'important'); });
     body.appendChild(preview);
 
     // Print
@@ -63,3 +63,4 @@ export function Toolbar({ saved }: ToolbarProps) {
     </div>
   );
 }
+
