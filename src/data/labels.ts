@@ -12,3 +12,4 @@ export const sectionLabels: Record<string, string> = {
   custom: '自訂區塊',
   'cover-letter': '求職信',
 };
+
