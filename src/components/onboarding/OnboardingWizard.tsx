@@ -14,7 +14,7 @@ const PROFICIENCY_LEVELS: { value: Proficiency; label: string }[] = [
 interface Props { onComplete: () => void; }
 
 export function OnboardingWizard({ onComplete }: Props) {
-  const { dispatch, setActiveSection, setTemplate, template, setVersionName } = useCV();
+  const { dispatch, setActiveSection, setTemplate, template, setVersionName, refreshVersions } = useCV();
   const [step, setStep] = useState(-1);
 
   const [fullName, setFullName] = useState('');
@@ -53,6 +53,7 @@ export function OnboardingWizard({ onComplete }: Props) {
       customSections: [],
     };
     localStorage.setItem('cv-version-' + versionLabel, JSON.stringify(newCV));
+    refreshVersions();
     dispatch({ type: 'LOAD_CV', payload: newCV });
     setActiveSection('personal');
     setVersionName(versionLabel);
@@ -292,6 +293,7 @@ function WizInput({ label, value, onChange, placeholder, type = 'text' }: {
     </div>
   );
 }
+
 
 
 
