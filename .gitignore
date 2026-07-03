@@ -22,3 +22,16 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Security & environment
+.env*
+credential*
+*.pem
+*.key
+
+# IDE extra
+*.code-workspace
+
+# OS
+Thumbs.db
+ehthumbs.db
