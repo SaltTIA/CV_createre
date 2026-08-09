@@ -73,7 +73,7 @@ export function CoverLetterPreview({ coverLetter, fullName, email, phone, locati
 
       {/* Signature */}
       <div className="mt-8">
-        <p className="text-[1em]">Sincerely,</p>
+        <p className="text-[1em]">Yours faithfully,</p>
         <p className="text-[1.1em] font-semibold text-slate-800 mt-5">{fullName}</p>
         <div className="text-[0.85em] text-slate-400 mt-1">{email} | {phone}</div>
       </div>
